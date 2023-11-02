@@ -1,20 +1,7 @@
 // import { Button } from '../Button'
-import { ContainerMenuLateral, ListaMenus, Logo, MenuLateralItem, Menus } from "./styles";
-import { GlobalContext } from '../../context/context';
-import { useContext } from "react";
+import { ContainerMenuLateral, ListaMenus, Logo, MenuLateralItem, Menus, StyledLink } from "./styles";
 
 export function MenuLateral() {
-  const {
-    sistemaUsado,
-    setSistemaUsado,
-    menuUsado,
-    setMenuUsado
-  } = useContext(GlobalContext);
-
-  
-  function handleSayHello() {
-
-  }
 
   return (
     <ContainerMenuLateral>
@@ -23,12 +10,15 @@ export function MenuLateral() {
         alt="ReactJS logo"
       />
       <Menus>
-
         <h3>Menus</h3>
         <ListaMenus>
-          <MenuLateralItem onClick={() => setMenuUsado('Gerenciador')}>
-            Gerenciador
-          </MenuLateralItem>
+
+          <StyledLink to="/SistemaUsuarios/Gerenciador">
+            <MenuLateralItem>
+              <p>Gerenciador</p>
+            </MenuLateralItem>
+          </StyledLink>
+
         </ListaMenus>
 
       </Menus>
