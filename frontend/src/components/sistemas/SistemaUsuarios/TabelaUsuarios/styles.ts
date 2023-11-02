@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { corDaFontClara, corDaFontEscura, CorDestaque } from '../../const/global_const'
+import { corDaFontClara, corDaFontEscura, CorDestaque } from '../../../const/global_const'
 import { Link } from 'react-router-dom';
 
 

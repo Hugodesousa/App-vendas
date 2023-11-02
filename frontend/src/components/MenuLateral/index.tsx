@@ -13,7 +13,7 @@ export function MenuLateral() {
         <h3>Menus</h3>
         <ListaMenus>
 
-          <StyledLink to="/SistemaUsuarios/Gerenciador">
+          <StyledLink to="/Gerenciador">
             <MenuLateralItem>
               <p>Gerenciador</p>
             </MenuLateralItem>

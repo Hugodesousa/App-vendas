@@ -10,7 +10,7 @@ export function Gerenciador() {
       <MenuLateral />
       <Conteudo>
 
-            <StyledLink to="/SistemaUsuarios">
+            <StyledLink to="/Gerenciador/SistemaUsuarios">
               <IconeSistema>
                 <p>Usuarios</p>
               </IconeSistema>

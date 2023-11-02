@@ -57,42 +57,42 @@ export function TabelaUsuarios() {
                 {usuarios.map((usuario, index) => (
                     <Tr key={usuario.pk_user_id} onClick={() => null}>
                         <Td>
-                            <StyledLink to="/">
+                            <StyledLink to={`/Gerenciador/SistemaUsuarios/EditarUsuario/${usuario.pk_user_id}`}>
                                 <p>
                                     {usuario.user_nome}
                                 </p>
                             </StyledLink>
                         </Td>
                         <Td>
-                            <StyledLink to="/">
+                            <StyledLink to={`/Gerenciador/SistemaUsuarios/EditarUsuario/${usuario.pk_user_id}`}>
                                 <p>
                                     {usuario.user_email}
                                 </p>
                             </StyledLink>
                         </Td>
                         <Td>
-                            <StyledLink to="/">
+                            <StyledLink to={`/Gerenciador/SistemaUsuarios/EditarUsuario/${usuario.pk_user_id}`}>
                                 <p>
                                     {usuario.data_cadastro}
                                 </p>
                             </StyledLink>
                         </Td>
                         <Td>
-                            <StyledLink to="/">
+                            <StyledLink to={`/Gerenciador/SistemaUsuarios/EditarUsuario/${usuario.pk_user_id}`}>
                                 <p>
                                     {usuario.tipo_usuario}
                                 </p>
                             </StyledLink>
                         </Td>
                         <Td>
-                            <StyledLink to="/">
+                            <StyledLink to={`/Gerenciador/SistemaUsuarios/EditarUsuario/${usuario.pk_user_id}`}>
                                 <p>
                                     {usuario.end_completo}
                                 </p>
                             </StyledLink>
                         </Td>
                         <Td>
-                            <StyledLink to="/">
+                            <StyledLink to={`/Gerenciador/SistemaUsuarios/EditarUsuario/${usuario.pk_user_id}`}>
                                 <p>
                                     {usuario.telefone}
                                 </p>

@@ -3,6 +3,7 @@ import { Routes, Route} from 'react-router-dom';
 import { Home } from './components/Home'
 import { SistemaUsuarios } from './components/sistemas/SistemaUsuarios';
 import { Gerenciador } from './components/Menus/Gerenciador';
+import { EditarUsuario } from './components/sistemas/SistemaUsuarios/EditarUsuario';
 
 export function App() {
   return (
@@ -11,8 +12,9 @@ export function App() {
       <Routes>
 
         <Route path="/" element={<Home />} />
-        <Route path="/SistemaUsuarios" element={<SistemaUsuarios />} />
-        <Route path="/SistemaUsuarios/Gerenciador" element={<Gerenciador />} />
+        <Route path="/Gerenciador" element={<Gerenciador />} />
+        <Route path="/Gerenciador/SistemaUsuarios" element={<SistemaUsuarios />} />
+        <Route path="/Gerenciador/SistemaUsuarios/EditarUsuario/:userId" element={<EditarUsuario />} />
 
       </Routes>
     </>
