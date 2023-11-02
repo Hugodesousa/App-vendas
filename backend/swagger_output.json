@@ -1,0 +1,83 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Budget API",
+    "description": ""
+  },
+  "host": "localhost:3001",
+  "basePath": "/",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/users/list": {
+      "get": {
+        "description": "Retorna uma lista com todos os usuários",
+        "summary": "Retorna uma lista com todos os usuários",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Lista retornado com sucesso"
+          },
+          "404": {
+            "description": "Erro na requisição ao mockEnd"
+          }
+        }
+      }
+    },
+    "/products/list": {
+      "get": {
+        "description": "Retorna uma lista com todos os produtos",
+        "summary": "Retorna uma lista com todos os produtos",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Lista retornado com sucesso"
+          },
+          "404": {
+            "description": "Erro na requisição ao mockEnd"
+          }
+        }
+      }
+    },
+    "/budget/{id}": {
+      "get": {
+        "description": "Retorna um objeto contendo o valor do orçamento de acordo com a taxa do usuário",
+        "summary": "Retorna um objeto contendo o valor do orçamento de acordo com a taxa do usuário",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Id de um usuário cadastrado",
+            "type": "string",
+            "example": "1"
+          },
+          {
+            "name": "productList",
+            "in": "query",
+            "required": true,
+            "description": "Ids de produtos cadastrados",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Orçamento retornado com sucesso"
+          },
+          "400": {
+            "description": "Ids de usuário ou produto não encontrados ou invalidos"
+          },
+          "404": {
+            "description": "Usuário ou produto não cadastrado"
+          }
+        }
+      }
+    }
+  }
+}
