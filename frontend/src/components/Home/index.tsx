@@ -1,8 +1,7 @@
 // import { Button } from '../Button'
 import { Container, Conteudo, IconeSistema } from './styles'
-import { IconeMenuLateral } from "../IconeMenuLateral";
-import { useState, useEffect, SetStateAction, useContext } from 'react';
-import { types } from '@babel/core';
+import { MenuLateral } from "../MenuLateral";
+import { useContext } from 'react';
 import { GlobalContext } from '../../context/context';
 import { Link } from 'react-router-dom';
 
@@ -22,7 +21,7 @@ export function Home() {
 
   return (
     <Container>
-      <IconeMenuLateral />
+      <MenuLateral />
       <Conteudo>
         {menuUsado === '' &&
           <h1>Bem vindo</h1>
@@ -30,16 +29,18 @@ export function Home() {
 
         {menuUsado.toLowerCase() === 'gerenciador' &&
           <>
-            {/* <Link to="/SistemaUsuarios">
+            <Link to="/SistemaUsuarios">
               <IconeSistema>
                 <p>Usuarios</p>
               </IconeSistema>
-            </Link> */}
+            </Link>
             <IconeSistema>
               <p>Usuarios</p>
-            </IconeSistema><IconeSistema>
+            </IconeSistema>
+            <IconeSistema>
               <p>Usuarios</p>
-            </IconeSistema><IconeSistema>
+            </IconeSistema>
+            <IconeSistema>
               <p>Usuarios</p>
             </IconeSistema>
           </>

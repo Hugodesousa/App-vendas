@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import { CorDestaque, corDaFontClara, corDaFontEscura, corDeFundoEscura } from '../const/global_const'
 
 export const Container = styled.div`
-  
+
   display: flex;
 
 `
@@ -12,10 +12,12 @@ export const Conteudo = styled.div`
   border-width: 2px;
   border-color:  #9B111E;
   border-style: solid;
-  width: 88rem;
+  width: 110rem;
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
+  justify-content: center;
+  text-align: center;
 `
 
 export const IconeSistema = styled.button`

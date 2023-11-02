@@ -3,7 +3,7 @@ import { ContainerMenuLateral, ListaMenus, Logo, MenuLateralItem, Menus } from "
 import { GlobalContext } from '../../context/context';
 import { useContext } from "react";
 
-export function IconeMenuLateral() {
+export function MenuLateral() {
   const {
     sistemaUsado,
     setSistemaUsado,
