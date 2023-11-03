@@ -19,3 +19,8 @@ export const Conteudo = styled.div`
   justify-content: center;
   text-align: center;
 `
+
+export const SystemEditar = styled.div`
+  display: flex;
+  flex-direction: column;
+`

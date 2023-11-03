@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { Table, Td, ThHeader, TrHeader, Tr, StyledLink } from "./styles";
-import { Link } from "react-router-dom";
-
 
 
 export function TabelaUsuarios() {
