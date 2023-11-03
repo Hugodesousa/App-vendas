@@ -145,12 +145,17 @@ export function EditarUsuario() {
     <Container>
       <MenuLateral />
       <Conteudo>
+
         <SystemEditar>
+
           <h1>Editar Usuario</h1>
+
           <Form onSubmit={handleSubmit}>
 
             <SubTitle>Dados de usuário</SubTitle>
+
             <FormSection>
+
               <FormGroup>
                 <label>Nome:</label>
                 <Input
@@ -160,6 +165,7 @@ export function EditarUsuario() {
                   onChange={handleInputChange}
                 />
               </FormGroup>
+
               <FormGroup>
                 <label>Email:</label>
                 <Input
@@ -169,11 +175,14 @@ export function EditarUsuario() {
                   onChange={handleInputChange}
                 />
               </FormGroup>
+
             </FormSection>
 
             <SubTitle>Dados de Endereço:</SubTitle>
+
             <FormSection>
               {Object.keys(usuario.endereco).map((key) => (
+
                 <FormGroup key={key}>
                   <label>{key.charAt(0).toUpperCase() + key.slice(1)}:</label>
                   <Input
@@ -183,20 +192,23 @@ export function EditarUsuario() {
                     onChange={handleEnderecoChange}
                   />
                 </FormGroup>
+
               ))}
+
               <p>{`Endereço completo: ${usuario.endereco.logradouro} ${usuario.endereco.numero}, ${usuario.endereco.complemento} - ${usuario.endereco.bairro}, ${usuario.endereco.cidade}, ${usuario.endereco.pais} - ${usuario.endereco.cep}`}</p>
+
             </FormSection>
 
             <SubTitle>Dados de Contato:</SubTitle>
 
-
             <FormSection>
               {contatos.map((contato, index) => {
-                console.log('test',contato.pk_contato_id);
-                
+                console.log('test', contato.pk_contato_id);
+
                 if (contato.pk_contato_id !== '') {
                   return (
                     <div key={index}>
+
                       <FormGroup>
                         <label>{`Telefone ${index + 1}`}:</label>
                         <Input
@@ -210,6 +222,7 @@ export function EditarUsuario() {
                           }}
                         />
                       </FormGroup>
+
                       <FormGroup>
                         <label>DDD:</label>
                         <Input
@@ -223,6 +236,7 @@ export function EditarUsuario() {
                           }}
                         />
                       </FormGroup>
+
                     </div>
                   );
                 }
@@ -230,10 +244,10 @@ export function EditarUsuario() {
               })}
             </FormSection>
 
-
             <FormGroup>
               <SubmitButton type="submit">Atualizar</SubmitButton>
             </FormGroup>
+            
           </Form>
         </SystemEditar>
       </Conteudo>

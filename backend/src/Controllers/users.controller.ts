@@ -13,6 +13,14 @@ class UsersController extends Controller {
     this.usersService = new UsersService(res);
   }
 
+  public usuariosTipo() {
+    const sql = 'SELECT pk_user_tipo_id, tipo_usuario FROM usuarios_tipo;';
+
+    this.runQueryWithParams(sql, [])
+      .then(rows => this.res.status(200).json(rows))
+      .catch(error => this.res.status(500).send(error));
+
+  }
 
   public findUser() {
     const sql = `
@@ -43,22 +51,14 @@ class UsersController extends Controller {
     where u.pk_user_id = ?;
     `;
 
-
     const user = this.req.query.userId || null;
 
-
-    if ( user) {
+    if (user) {
       const params = [user];
 
-      db.all(sql, params, (selectErr, rows) => {
-        if (selectErr) {
-          console.error('Erro ao executar a consulta --->', selectErr.message);
-          return this.res.status(500).send(selectErr.message);
-        } else {
-          return this.res.status(200).json(rows);
-        }
-      });
-
+      this.runQueryWithParams(sql, params)
+        .then(rows => this.res.status(200).json(rows))
+        .catch(error => this.res.status(500).send(error));
     }
 
     if (!user) {
@@ -104,52 +104,76 @@ class UsersController extends Controller {
     }
   }
 
+  private runQueryWithParams(sql: string, params: (string | string[] | QueryString.ParsedQs | QueryString.ParsedQs[])[]): Promise<any> {
+    return new Promise((resolve, reject) => {
+      db.all(sql, params, (err, rows) => {
+        if (err) {
+          console.error('Erro ao executar a consulta --->', err.message);
+          reject(err.message);
+        } else {
+          resolve(rows);
+        }
+      });
+    });
+  }
 
   private update(sql: string, params: (string | QueryString.ParsedQs | string[] | QueryString.ParsedQs)[]) {
     return new Promise<void>((resolve, reject) => {
-        db.run(sql, params, (updateErr) => {
-            if (updateErr) {
-                console.error('Erro ao executar a update --->', updateErr.message);
-                reject(updateErr.message);
-            } else {
-                resolve();
-            }
-        });
+      db.run(sql, params, (updateErr) => {
+        if (updateErr) {
+          console.error('Erro ao executar a update --->', updateErr.message);
+          reject(updateErr.message);
+        } else {
+          resolve();
+        }
+      });
     });
-}
+  }
 
-public async editUsers() {
-  // console.log('query==>', this.req.body);
+  private insert(sql: string, params: (string | QueryString.ParsedQs | string[] | QueryString.ParsedQs)[]): Promise<any> {
+    return new Promise((resolve, reject) => {
+      db.run(sql, params, function (err) {
+        if (err) {
+          console.error('Erro ao executar o insert:', err.message);
+          reject(err.message);
+        } else {
+          resolve({ insertId: this.lastID });
+        }
+      });
+    });
+  }
 
-  const {
-    novoNome,
-    novoEmail,
-    userId,
-    logradouro,
-    pais,
-    cep,
-    estado,
-    cidade,
-    bairro,
-    numero,
-    complemento,
-    endCompleto,
-    novosContatos,
-  } = this.req.body;
+  public async editUsers() {
+    // console.log('query==>', this.req.body);
+    const {
+      novoNome,
+      novoEmail,
+      userId,
+      logradouro,
+      pais,
+      cep,
+      estado,
+      cidade,
+      bairro,
+      numero,
+      complemento,
+      endCompleto,
+      novosContatos,
+    } = this.req.body;
 
-  try {
-    if (novoNome && userId && novoEmail) {
-      const sqlNomeEemail = `
+    try {
+      if (novoNome && userId && novoEmail) {
+        const sqlNomeEemail = `
         UPDATE usuarios
         SET user_nome = ?, user_email = ?
         WHERE pk_user_id = ?;
       `;
-      const paramsNomeEemail = [novoNome, novoEmail, userId];
-      await this.update(sqlNomeEemail, paramsNomeEemail);
-    }
+        const paramsNomeEemail = [novoNome, novoEmail, userId];
+        await this.update(sqlNomeEemail, paramsNomeEemail);
+      }
 
-    if (logradouro && pais && cep && estado && cidade && bairro && numero && complemento && endCompleto) {
-      const sqlEndereco = `
+      if (logradouro && pais && cep && estado && cidade && bairro && numero && complemento && endCompleto) {
+        const sqlEndereco = `
         UPDATE endereco
         SET
           logradouro = ?,
@@ -165,29 +189,111 @@ public async editUsers() {
           SELECT fk_endereco_id FROM usuarios WHERE pk_user_id = ?
         );
       `;
-      const paramsEndereco = [logradouro, pais, cep, estado, cidade, bairro, numero, complemento, endCompleto, userId];
-      await this.update(sqlEndereco, paramsEndereco);
-    }
+        const paramsEndereco = [logradouro, pais, cep, estado, cidade, bairro, numero, complemento, endCompleto, userId];
+        await this.update(sqlEndereco, paramsEndereco);
+      }
 
-    if (novosContatos && novosContatos.length > 0) {
-      for (const contato of novosContatos) {
-        const { pk_contato_id, tel, ddd } = contato;
-        const sqlContato = `
+      if (novosContatos && novosContatos.length > 0) {
+        for (const contato of novosContatos) {
+          const { pk_contato_id, tel, ddd } = contato;
+          const sqlContato = `
           UPDATE contatos
           SET ddd = ?, telefone = ?
           WHERE pk_contato_id = ?;
         `;
-        const paramsContato = [ddd, tel, pk_contato_id];
-        await this.update(sqlContato, paramsContato);
+          const paramsContato = [ddd, tel, pk_contato_id];
+          await this.update(sqlContato, paramsContato);
+        }
       }
+
+      this.res.status(200).json({ message: 'Usuário atualizado com sucesso' });
+
+    } catch (error) {
+      this.res.status(500).send(error);
     }
-
-    this.res.status(200).json({ message: 'Usuário atualizado com sucesso' });
-
-  } catch (error) {
-    this.res.status(500).send(error);
   }
-}
+
+  public async inserirUsuarios() {
+    const {
+      novoNome,
+      novoEmail,
+      logradouro,
+      pais,
+      cep,
+      estado,
+      cidade,
+      bairro,
+      numero,
+      complemento,
+      endCompleto,
+      novosContatos,
+    } = this.req.body;
+
+    try {
+      if (novoNome && novoEmail) {
+        // Inserir um novo usuário
+        const sqlNovoUsuario = `
+        INSERT INTO usuarios (user_nome, user_email)
+        VALUES (?, ?);
+      `;
+        const paramsNovoUsuario = [novoNome, novoEmail];
+        const resultUsuario = await this.insert(sqlNovoUsuario, paramsNovoUsuario);
+
+        const userId = resultUsuario.insertId; // Obtém o ID do novo usuário inserido
+
+        if (
+          logradouro &&
+          pais &&
+          cep &&
+          estado &&
+          cidade &&
+          bairro &&
+          numero &&
+          complemento &&
+          endCompleto
+        ) {
+          // Inserir um novo endereço para o usuário
+          const sqlEndereco = `
+          INSERT INTO endereco (logradouro, pais, cep, estado, cidade, bairro, numero, complemento, end_completo)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+        `;
+          const paramsEndereco = [logradouro, pais, cep, estado, cidade, bairro, numero, complemento, endCompleto];
+          const resultEndereco = await this.insert(sqlEndereco, paramsEndereco);
+
+          const enderecoId = resultEndereco.insertId; // Obtém o ID do novo endereço inserido
+
+          // Atualizar o usuário com o ID do novo endereço
+          const sqlUpdateUsuario = `
+          UPDATE usuarios
+          SET fk_endereco_id = ?
+          WHERE pk_user_id = ?;
+        `;
+          const paramsUpdateUsuario = [enderecoId, userId];
+          await this.update(sqlUpdateUsuario, paramsUpdateUsuario);
+        }
+
+        if (novosContatos && novosContatos.length > 0) {
+          // Inserir novos contatos para o usuário
+          for (const contato of novosContatos) {
+            const { tel, ddd } = contato;
+            const sqlContato = `
+            INSERT INTO contatos (telefone, ddd, fk_user_id)
+            VALUES (?, ?, ?);
+          `;
+            const paramsContato = [tel, ddd, userId];
+            await this.insert(sqlContato, paramsContato);
+          }
+        }
+
+        this.res.status(200).json({ message: 'Novo usuário inserido com sucesso' });
+      } else {
+        this.res.status(400).json({ message: 'Os campos obrigatórios estão faltando' });
+      }
+    } catch (error) {
+      this.res.status(500).send(error);
+    }
+  }
+
 
 }
 

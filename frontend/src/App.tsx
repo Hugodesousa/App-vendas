@@ -4,6 +4,7 @@ import { Home } from './components/Home'
 import { SistemaUsuarios } from './components/sistemas/SistemaUsuarios';
 import { Gerenciador } from './components/Menus/Gerenciador';
 import { EditarUsuario } from './components/sistemas/SistemaUsuarios/EditarUsuario';
+import { InserirUsuario } from './components/sistemas/SistemaUsuarios/InserirUsuario';
 
 export function App() {
   return (
@@ -15,6 +16,7 @@ export function App() {
         <Route path="/Gerenciador" element={<Gerenciador />} />
         <Route path="/Gerenciador/SistemaUsuarios" element={<SistemaUsuarios />} />
         <Route path="/Gerenciador/SistemaUsuarios/EditarUsuario/:userId" element={<EditarUsuario />} />
+        <Route path="/Gerenciador/SistemaUsuarios/InserirUsuario" element={<InserirUsuario />} />
 
       </Routes>
     </>
