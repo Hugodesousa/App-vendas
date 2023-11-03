@@ -26,7 +26,7 @@ export function EditarUsuario() {
     }
   });
 
-  const [contatos, setContatos] = useState([{ pk_contato_id:'', tel: '', ddd: '' }]);
+  const [contatos, setContatos] = useState([{ pk_contato_id: '', tel: '', ddd: '' }]);
   const { userId } = useParams();
 
   useEffect(() => {
@@ -63,7 +63,16 @@ export function EditarUsuario() {
           }
         });
 
-        setContatos(data)
+        const extractedContatos = data.map((item: any) => {
+          const { pk_contato_id, tel, ddd } = item;
+          return {
+            pk_contato_id: pk_contato_id?.toString() || '',
+            tel: tel?.toString() || '',
+            ddd: ddd?.toString() || '',
+          };
+        });
+
+        setContatos(extractedContatos);
 
       })
       .catch((error) => {
@@ -182,40 +191,43 @@ export function EditarUsuario() {
 
 
             <FormSection>
-              {/* Renderização dos campos de contato */}
-              {contatos.map((contato, index) => (
-                <div key={index}>
-                  <FormGroup>
-                    <label>{`Telefone ${index + 1}`}:</label>
-                    <Input
-                      type="text"
-                      name={`tel_${index}`}
-                      value={contato.tel}
-                      onChange={(e) => {
-                        const newContatos = [...contatos];
-                        newContatos[index].tel = e.target.value;
-                        setContatos(newContatos);
-                      }}
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <label>DDD:</label>
-                    <Input
-                      type="text"
-                      name={`ddd_${index}`}
-                      value={contato.ddd}
-                      onChange={(e) => {
-                        const newContatos = [...contatos];
-                        newContatos[index].ddd = e.target.value;
-                        setContatos(newContatos);
-                      }}
-                    />
-                  </FormGroup>
-                </div>
-              ))}
-
-              {/* Botão para adicionar um novo contato */}
-              {/* <button type="button" onClick={() => null}>Adicionar Contato</button> */}
+              {contatos.map((contato, index) => {
+                console.log('test',contato.pk_contato_id);
+                
+                if (contato.pk_contato_id !== '') {
+                  return (
+                    <div key={index}>
+                      <FormGroup>
+                        <label>{`Telefone ${index + 1}`}:</label>
+                        <Input
+                          type="text"
+                          name={`tel_${index}`}
+                          value={contato.tel}
+                          onChange={(e) => {
+                            const newContatos = [...contatos];
+                            newContatos[index].tel = e.target.value;
+                            setContatos(newContatos);
+                          }}
+                        />
+                      </FormGroup>
+                      <FormGroup>
+                        <label>DDD:</label>
+                        <Input
+                          type="text"
+                          name={`ddd_${index}`}
+                          value={contato.ddd}
+                          onChange={(e) => {
+                            const newContatos = [...contatos];
+                            newContatos[index].ddd = e.target.value;
+                            setContatos(newContatos);
+                          }}
+                        />
+                      </FormGroup>
+                    </div>
+                  );
+                }
+                return null; // Se pk_contato_id for null, renderiza nada
+              })}
             </FormSection>
 
 

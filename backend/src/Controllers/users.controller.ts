@@ -119,52 +119,75 @@ class UsersController extends Controller {
 }
 
 public async editUsers() {
-    console.log(this.req.body);
+  // console.log('query==>', this.req.body);
 
-    const sqlNomeEemail = `
+  const {
+    novoNome,
+    novoEmail,
+    userId,
+    logradouro,
+    pais,
+    cep,
+    estado,
+    cidade,
+    bairro,
+    numero,
+    complemento,
+    endCompleto,
+    novosContatos,
+  } = this.req.body;
+
+  try {
+    if (novoNome && userId && novoEmail) {
+      const sqlNomeEemail = `
         UPDATE usuarios
         SET user_nome = ?, user_email = ?
         WHERE pk_user_id = ?;
-    `;
-  
-    const sqlEndereco = `
+      `;
+      const paramsNomeEemail = [novoNome, novoEmail, userId];
+      await this.update(sqlNomeEemail, paramsNomeEemail);
+    }
+
+    if (logradouro && pais && cep && estado && cidade && bairro && numero && complemento && endCompleto) {
+      const sqlEndereco = `
         UPDATE endereco
         SET
-            logradouro = ?,
-            pais = ?,
-            cep = ?,
-            estado = ?,
-            cidade = ?,
-            bairro = ?,
-            numero = ?,
-            complemento = ?,
-            end_completo = ?
+          logradouro = ?,
+          pais = ?,
+          cep = ?,
+          estado = ?,
+          cidade = ?,
+          bairro = ?,
+          numero = ?,
+          complemento = ?,
+          end_completo = ?
         WHERE pk_endereco_id = (
-            SELECT fk_endereco_id FROM usuarios WHERE pk_user_id = ?
+          SELECT fk_endereco_id FROM usuarios WHERE pk_user_id = ?
         );
-    `;
+      `;
+      const paramsEndereco = [logradouro, pais, cep, estado, cidade, bairro, numero, complemento, endCompleto, userId];
+      await this.update(sqlEndereco, paramsEndereco);
+    }
 
-    const { novoNome, novoEmail, userId, logradouro, pais, cep, estado, cidade, bairro, numero, complemento, endCompleto } = this.req.body;
+    if (novosContatos && novosContatos.length > 0) {
+      for (const contato of novosContatos) {
+        const { pk_contato_id, tel, ddd } = contato;
+        const sqlContato = `
+          UPDATE contatos
+          SET ddd = ?, telefone = ?
+          WHERE pk_contato_id = ?;
+        `;
+        const paramsContato = [ddd, tel, pk_contato_id];
+        await this.update(sqlContato, paramsContato);
+      }
+    }
 
-    if (novoNome && userId && novoEmail) {
-        const paramsNomeEemail = [novoNome, novoEmail, userId];
-        try {
-            await this.update(sqlNomeEemail, paramsNomeEemail);
+    this.res.status(200).json({ message: 'Usuário atualizado com sucesso' });
 
-            // Atualização do endereço
-            if (logradouro && pais && cep && estado && cidade && bairro && numero && complemento && endCompleto) {
-                const paramsEndereco = [logradouro, pais, cep, estado, cidade, bairro, numero, complemento, endCompleto, userId];
-                await this.update(sqlEndereco, paramsEndereco);
-                this.res.status(200).json({ message: 'Usuário atualizado com sucesso' });
-            }
-        } catch (error) {
-            this.res.status(500).send(error);
-        }
-    } 
+  } catch (error) {
+    this.res.status(500).send(error);
+  }
 }
-
-
-  
 
 }
 
