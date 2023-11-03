@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { CorDestaque } from '../../const/global_const';
 
 
 export const SystemUser = styled.div`
@@ -18,6 +19,11 @@ export const DivNovoUser = styled.div`
 `;
 
 export const Button = styled.button`
-    width: 4rem;
-    height: 2.5rem
+  padding: 10px 20px;
+  margin-top: 20px;
+  background-color: ${CorDestaque};
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 `;

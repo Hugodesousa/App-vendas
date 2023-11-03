@@ -13,7 +13,9 @@ export const Conteudo = styled.div`
   border-width: 2px;
   border-color:  #9B111E;
   border-style: solid;
-  width: 110rem;
+  /* width: 110rem; */
+  width: calc(100% - 12rem);
+  margin-left: 12rem;
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;

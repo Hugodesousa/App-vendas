@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { CorDestaque } from '../const/global_const';
 
 export const ContainerMenuLateral = styled.div`
-
+  position: fixed;
   display: flex;
   height: 100vh;
   width: 12rem;

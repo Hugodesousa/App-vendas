@@ -1,12 +1,12 @@
 // import { Button } from '../Button'
-import { Container, Conteudo, SystemEditar } from "./styles";
+import { Container, Conteudo, Form, FormGroup, FormSection, Input, SubTitle, SubmitButton, SystemEditar } from "./styles";
 import { MenuLateral } from "../../../MenuLateral";
 import { useState, FormEvent, useEffect } from "react";
 import { useParams } from 'react-router-dom';
-
+import { IUser, IEndereco } from "../../../../interfaces/UserInterfaces";
 
 export function EditarUsuario() {
-  const [usuario, setUsuario] = useState({
+  const [usuario, setUsuario] = useState<IUser>({
     pk_user_id: '',
     user_nome: '',
     user_email: '',
@@ -26,6 +26,7 @@ export function EditarUsuario() {
     }
   });
 
+  const [contatos, setContatos] = useState([{ pk_contato_id:'', tel: '', ddd: '' }]);
   const { userId } = useParams();
 
   useEffect(() => {
@@ -40,8 +41,7 @@ export function EditarUsuario() {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
-
+        console.log('===>', data);
         const usuarioData = data[0];
         setUsuario({
           pk_user_id: usuarioData.pk_user_id,
@@ -53,36 +53,36 @@ export function EditarUsuario() {
           telefone: usuarioData.telefone,
           endereco: {
             logradouro: usuarioData.logradouro,
-            pais: usuarioData.pais,
-            cep: usuarioData.cep,
-            estado: usuarioData.estado,
-            cidade: usuarioData.cidade,
-            bairro: usuarioData.bairro,
             numero: usuarioData.numero,
-            complemento: usuarioData.complemento
+            complemento: usuarioData.complemento,
+            bairro: usuarioData.bairro,
+            cidade: usuarioData.cidade,
+            estado: usuarioData.estado,
+            cep: usuarioData.cep,
+            pais: usuarioData.pais,
           }
         });
+
+        setContatos(data)
 
       })
       .catch((error) => {
         console.error('There was a problem with the fetch operation:', error);
       });
-  }, []);
+  }, [userId]);
 
-  const fetchPut = (apiUrl:string, requestBody:any) => {
-    return fetch(apiUrl, {
+  const fetchPut = async (apiUrl: string, requestBody: any) => {
+    const response = await fetch(apiUrl, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(requestBody)
-    })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
     });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return await response.json();
   };
 
   const handleSubmit = (event: FormEvent) => {
@@ -92,16 +92,26 @@ export function EditarUsuario() {
     const requestBody = {
       novoNome: usuario.user_nome,
       userId: usuario.pk_user_id,
-      novoEmail: usuario.user_email
+      novoEmail: usuario.user_email,
+      logradouro: usuario.endereco.logradouro,
+      pais: usuario.endereco.pais,
+      cep: usuario.endereco.cep,
+      estado: usuario.endereco.estado,
+      cidade: usuario.endereco.cidade,
+      bairro: usuario.endereco.bairro,
+      numero: usuario.endereco.numero,
+      complemento: usuario.endereco.complemento,
+      endCompleto: `${usuario.endereco.logradouro} ${usuario.endereco.numero}, ${usuario.endereco.complemento} - ${usuario.endereco.bairro}, ${usuario.endereco.cidade}, ${usuario.endereco.pais} - ${usuario.endereco.cep}`,
+      novosContatos: contatos
     };
 
     fetchPut(apiUrl, requestBody)
-    .then((data) => {
-      alert('Usuário Atualizado');
-    })
-    .catch((error) => {
-      console.error('There was a problem with the fetch operation:', error);
-    });
+      .then((data) => {
+        alert('Usuário Atualizado');
+      })
+      .catch((error) => {
+        console.error('There was a problem with the fetch operation:', error);
+      });
 
 
   };
@@ -111,39 +121,113 @@ export function EditarUsuario() {
     setUsuario({ ...usuario, [name]: value });
   };
 
+  const handleEnderecoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setUsuario(prevUsuario => ({
+      ...prevUsuario,
+      endereco: {
+        ...prevUsuario.endereco,
+        [name]: value
+      }
+    }));
+  };
+
   return (
     <Container>
       <MenuLateral />
       <Conteudo>
         <SystemEditar>
           <h1>Editar Usuario</h1>
-          <form onSubmit={handleSubmit}>
-            <label>
-              Nome:
-              <input
-                type="text"
-                name="user_nome"
-                value={usuario.user_nome}
-                onChange={handleInputChange}
-              />
-            </label>
-            <br />
-            <label>
-              Email:
-              <input
-                type="email"
-                name="user_email"
-                value={usuario.user_email}
-                onChange={handleInputChange}
-              />
-            </label>
-            <br />
-            {/* Adicione mais campos conforme necessário para a edição */}
-            <button type="submit">Atualizar</button>
-          </form>
+          <Form onSubmit={handleSubmit}>
+
+            <SubTitle>Dados de usuário</SubTitle>
+            <FormSection>
+              <FormGroup>
+                <label>Nome:</label>
+                <Input
+                  type="text"
+                  name="user_nome"
+                  value={usuario.user_nome}
+                  onChange={handleInputChange}
+                />
+              </FormGroup>
+              <FormGroup>
+                <label>Email:</label>
+                <Input
+                  type="email"
+                  name="user_email"
+                  value={usuario.user_email}
+                  onChange={handleInputChange}
+                />
+              </FormGroup>
+            </FormSection>
+
+            <SubTitle>Dados de Endereço:</SubTitle>
+            <FormSection>
+              {Object.keys(usuario.endereco).map((key) => (
+                <FormGroup key={key}>
+                  <label>{key.charAt(0).toUpperCase() + key.slice(1)}:</label>
+                  <Input
+                    type="text"
+                    name={key}
+                    value={usuario.endereco[key as keyof IEndereco]} // Uso do "as keyof IEndereco"
+                    onChange={handleEnderecoChange}
+                  />
+                </FormGroup>
+              ))}
+              <p>{`Endereço completo: ${usuario.endereco.logradouro} ${usuario.endereco.numero}, ${usuario.endereco.complemento} - ${usuario.endereco.bairro}, ${usuario.endereco.cidade}, ${usuario.endereco.pais} - ${usuario.endereco.cep}`}</p>
+            </FormSection>
+
+            <SubTitle>Dados de Contato:</SubTitle>
+
+
+            <FormSection>
+              {/* Renderização dos campos de contato */}
+              {contatos.map((contato, index) => (
+                <div key={index}>
+                  <FormGroup>
+                    <label>{`Telefone ${index + 1}`}:</label>
+                    <Input
+                      type="text"
+                      name={`tel_${index}`}
+                      value={contato.tel}
+                      onChange={(e) => {
+                        const newContatos = [...contatos];
+                        newContatos[index].tel = e.target.value;
+                        setContatos(newContatos);
+                      }}
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <label>DDD:</label>
+                    <Input
+                      type="text"
+                      name={`ddd_${index}`}
+                      value={contato.ddd}
+                      onChange={(e) => {
+                        const newContatos = [...contatos];
+                        newContatos[index].ddd = e.target.value;
+                        setContatos(newContatos);
+                      }}
+                    />
+                  </FormGroup>
+                </div>
+              ))}
+
+              {/* Botão para adicionar um novo contato */}
+              {/* <button type="button" onClick={() => null}>Adicionar Contato</button> */}
+            </FormSection>
+
+
+            <FormGroup>
+              <SubmitButton type="submit">Atualizar</SubmitButton>
+            </FormGroup>
+          </Form>
         </SystemEditar>
       </Conteudo>
-
     </Container>
   );
-}
+};
+
+
+

@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import IUsers from '../Interfaces/IUsers';
 import UsersService from '../Services/users.service';
 import Controller from './controller';
 import { db } from '../db/connect';
 import QueryString from 'qs';
+
 
 class UsersController extends Controller {
   private usersService: UsersService;
@@ -30,8 +30,12 @@ class UsersController extends Controller {
     e.cidade,
     e.bairro,
     e.numero, 
+    e.complemento,
     e.end_completo,
-    c.ddd || c.telefone as telefone
+    c.ddd, 
+    c.telefone as tel,
+    c.ddd || c.telefone as telefone,
+    c.pk_contato_id
     FROM usuarios as u
     INNER JOIN usuarios_tipo as ut ON u.fk_user_tipo_id = ut.pk_user_tipo_id
     INNER JOIN endereco as e ON e.pk_endereco_id = u.fk_endereco_id
@@ -39,9 +43,9 @@ class UsersController extends Controller {
     where u.pk_user_id = ?;
     `;
 
-    // const novoNome = this.req.query.novoNome || null;
+
     const user = this.req.query.userId || null;
-    // console.log(this.req.query);
+
 
     if ( user) {
       const params = [user];
@@ -101,43 +105,66 @@ class UsersController extends Controller {
   }
 
 
-  private update(sql:string, params:(string | QueryString.ParsedQs | string[] | QueryString.ParsedQs[])[], res: Response) {
-    db.run(sql, params, (updateErr) => {
-      if (updateErr) {
-        console.error('Erro ao executar a update --->', updateErr.message);
-        return res.status(500).send(updateErr.message);
-      } else {
-        return res.status(200).json({ message: 'Usuário atualizado com sucesso' });
-      }
+  private update(sql: string, params: (string | QueryString.ParsedQs | string[] | QueryString.ParsedQs)[]) {
+    return new Promise<void>((resolve, reject) => {
+        db.run(sql, params, (updateErr) => {
+            if (updateErr) {
+                console.error('Erro ao executar a update --->', updateErr.message);
+                reject(updateErr.message);
+            } else {
+                resolve();
+            }
+        });
     });
-  }
+}
 
-  public editUsers() {
+public async editUsers() {
+    console.log(this.req.body);
+
     const sqlNomeEemail = `
-    UPDATE usuarios
-    SET user_nome = ?, user_email = ?
-    WHERE pk_user_id = ?;
+        UPDATE usuarios
+        SET user_nome = ?, user_email = ?
+        WHERE pk_user_id = ?;
+    `;
+  
+    const sqlEndereco = `
+        UPDATE endereco
+        SET
+            logradouro = ?,
+            pais = ?,
+            cep = ?,
+            estado = ?,
+            cidade = ?,
+            bairro = ?,
+            numero = ?,
+            complemento = ?,
+            end_completo = ?
+        WHERE pk_endereco_id = (
+            SELECT fk_endereco_id FROM usuarios WHERE pk_user_id = ?
+        );
     `;
 
-    // const novoNome = this.req.query.novoNome || null;
-    // const novoEmail = this.req.query.novoEmail || null;
-    // const user = this.req.query.userId || null;
-    // console.log('query--->',this.req.query);
-    const { novoNome, novoEmail, userId } = this.req.body;
+    const { novoNome, novoEmail, userId, logradouro, pais, cep, estado, cidade, bairro, numero, complemento, endCompleto } = this.req.body;
 
-    if (novoNome && userId && novoEmail ) {
-      const paramsNomeEemail = [novoNome, novoEmail, userId];
-      this.update(sqlNomeEemail,paramsNomeEemail,this.res)
-    }
+    if (novoNome && userId && novoEmail) {
+        const paramsNomeEemail = [novoNome, novoEmail, userId];
+        try {
+            await this.update(sqlNomeEemail, paramsNomeEemail);
+
+            // Atualização do endereço
+            if (logradouro && pais && cep && estado && cidade && bairro && numero && complemento && endCompleto) {
+                const paramsEndereco = [logradouro, pais, cep, estado, cidade, bairro, numero, complemento, endCompleto, userId];
+                await this.update(sqlEndereco, paramsEndereco);
+                this.res.status(200).json({ message: 'Usuário atualizado com sucesso' });
+            }
+        } catch (error) {
+            this.res.status(500).send(error);
+        }
+    } 
+}
 
 
-
-
-    if (!novoNome || !userId || !novoEmail ) {
-      return this.res.status(500).send({ message: 'Nome, emil ou usuario invalido' });
-    }
-    
-  }
+  
 
 }
 
