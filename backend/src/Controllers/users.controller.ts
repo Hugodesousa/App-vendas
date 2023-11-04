@@ -227,64 +227,55 @@ class UsersController extends Controller {
       complemento,
       endCompleto,
       novosContatos,
+      tipoUser
     } = this.req.body;
-
+  
     try {
-      if (novoNome && novoEmail) {
-        // Inserir um novo usuário
+      if (novoNome && novoEmail && tipoUser) {
+        console.log('ttt',tipoUser);
+        
         const sqlNovoUsuario = `
-        INSERT INTO usuarios (user_nome, user_email)
-        VALUES (?, ?);
-      `;
-        const paramsNovoUsuario = [novoNome, novoEmail];
-        const resultUsuario = await this.insert(sqlNovoUsuario, paramsNovoUsuario);
-
-        const userId = resultUsuario.insertId; // Obtém o ID do novo usuário inserido
-
-        if (
-          logradouro &&
-          pais &&
-          cep &&
-          estado &&
-          cidade &&
-          bairro &&
-          numero &&
-          complemento &&
-          endCompleto
-        ) {
-          // Inserir um novo endereço para o usuário
-          const sqlEndereco = `
-          INSERT INTO endereco (logradouro, pais, cep, estado, cidade, bairro, numero, complemento, end_completo)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+          INSERT INTO usuarios (user_nome, user_email, data_cadastro, fk_user_tipo_id, user_ativo)
+          VALUES (?, ?, date('now'), ?, 1);
         `;
+        const paramsNovoUsuario = [novoNome, novoEmail,  tipoUser];
+        const resultUsuario = await this.insert(sqlNovoUsuario, paramsNovoUsuario);
+  
+        const userId = resultUsuario.insertId;
+        console.log('aaaa',userId);
+        
+  
+        if (logradouro && pais && cep && estado && cidade && bairro && numero && complemento && endCompleto) {
+          const sqlEndereco = `
+            INSERT INTO endereco (logradouro, pais, cep, estado, cidade, bairro, numero, complemento, end_completo, data_cadastro, ativo)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, date('now'), 1);
+          `;
           const paramsEndereco = [logradouro, pais, cep, estado, cidade, bairro, numero, complemento, endCompleto];
           const resultEndereco = await this.insert(sqlEndereco, paramsEndereco);
-
-          const enderecoId = resultEndereco.insertId; // Obtém o ID do novo endereço inserido
-
-          // Atualizar o usuário com o ID do novo endereço
+  
+          const enderecoId = resultEndereco.insertId;
+  
           const sqlUpdateUsuario = `
-          UPDATE usuarios
-          SET fk_endereco_id = ?
-          WHERE pk_user_id = ?;
-        `;
+            UPDATE usuarios
+            SET fk_endereco_id = ?
+            WHERE pk_user_id = ?;
+          `;
           const paramsUpdateUsuario = [enderecoId, userId];
           await this.update(sqlUpdateUsuario, paramsUpdateUsuario);
         }
-
+  
         if (novosContatos && novosContatos.length > 0) {
-          // Inserir novos contatos para o usuário
           for (const contato of novosContatos) {
             const { tel, ddd } = contato;
             const sqlContato = `
-            INSERT INTO contatos (telefone, ddd, fk_user_id)
-            VALUES (?, ?, ?);
-          `;
+              INSERT INTO contatos (telefone, ddi, ddd, fk_user_id, data_cadastro, ativo)
+              VALUES (?,55, ?, ?, date('now'), 1);
+            `;
             const paramsContato = [tel, ddd, userId];
             await this.insert(sqlContato, paramsContato);
           }
         }
-
+  
         this.res.status(200).json({ message: 'Novo usuário inserido com sucesso' });
       } else {
         this.res.status(400).json({ message: 'Os campos obrigatórios estão faltando' });
@@ -293,6 +284,88 @@ class UsersController extends Controller {
       this.res.status(500).send(error);
     }
   }
+  
+
+  // public async inserirUsuarios() {
+  //   const {
+  //     novoNome,
+  //     novoEmail,
+  //     logradouro,
+  //     pais,
+  //     cep,
+  //     estado,
+  //     cidade,
+  //     bairro,
+  //     numero,
+  //     complemento,
+  //     endCompleto,
+  //     novosContatos,
+  //   } = this.req.body;
+
+  //   try {
+  //     if (novoNome && novoEmail) {
+  //       // Inserir um novo usuário
+  //       const sqlNovoUsuario = `
+  //       INSERT INTO usuarios (user_nome, user_email)
+  //       VALUES (?, ?);
+  //     `;
+  //       const paramsNovoUsuario = [novoNome, novoEmail];
+  //       const resultUsuario = await this.insert(sqlNovoUsuario, paramsNovoUsuario);
+
+  //       const userId = resultUsuario.insertId; // Obtém o ID do novo usuário inserido
+
+  //       if (
+  //         logradouro &&
+  //         pais &&
+  //         cep &&
+  //         estado &&
+  //         cidade &&
+  //         bairro &&
+  //         numero &&
+  //         complemento &&
+  //         endCompleto
+  //       ) {
+  //         // Inserir um novo endereço para o usuário
+  //         const sqlEndereco = `
+  //         INSERT INTO endereco (logradouro, pais, cep, estado, cidade, bairro, numero, complemento, end_completo)
+  //         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+  //       `;
+  //         const paramsEndereco = [logradouro, pais, cep, estado, cidade, bairro, numero, complemento, endCompleto];
+  //         const resultEndereco = await this.insert(sqlEndereco, paramsEndereco);
+
+  //         const enderecoId = resultEndereco.insertId; // Obtém o ID do novo endereço inserido
+
+  //         // Atualizar o usuário com o ID do novo endereço
+  //         const sqlUpdateUsuario = `
+  //         UPDATE usuarios
+  //         SET fk_endereco_id = ?
+  //         WHERE pk_user_id = ?;
+  //       `;
+  //         const paramsUpdateUsuario = [enderecoId, userId];
+  //         await this.update(sqlUpdateUsuario, paramsUpdateUsuario);
+  //       }
+
+  //       if (novosContatos && novosContatos.length > 0) {
+  //         // Inserir novos contatos para o usuário
+  //         for (const contato of novosContatos) {
+  //           const { tel, ddd } = contato;
+  //           const sqlContato = `
+  //           INSERT INTO contatos (telefone, ddd, fk_user_id)
+  //           VALUES (?, ?, ?);
+  //         `;
+  //           const paramsContato = [tel, ddd, userId];
+  //           await this.insert(sqlContato, paramsContato);
+  //         }
+  //       }
+
+  //       this.res.status(200).json({ message: 'Novo usuário inserido com sucesso' });
+  //     } else {
+  //       this.res.status(400).json({ message: 'Os campos obrigatórios estão faltando' });
+  //     }
+  //   } catch (error) {
+  //     this.res.status(500).send(error);
+  //   }
+  // }
 
 
 }

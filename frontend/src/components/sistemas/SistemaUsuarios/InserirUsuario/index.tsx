@@ -53,7 +53,7 @@ export function InserirUsuario() {
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault();
 
-        const apiUrl = `http://localhost:3001/users/add`;
+        const apiUrl = `http://localhost:3001/users/InserirUsuario`;
         const requestBody = {
             user_nome: usuario.user_nome,
             user_email: usuario.user_email,
@@ -66,6 +66,7 @@ export function InserirUsuario() {
             cep: usuario.endereco.cep,
             pais: usuario.endereco.pais,
             endCompleto: `${usuario.endereco.logradouro} ${usuario.endereco.numero}, ${usuario.endereco.complemento} - ${usuario.endereco.bairro}, ${usuario.endereco.cidade}, ${usuario.endereco.pais} - ${usuario.endereco.cep}`,
+            tipoUser: usuario.tipo_usuario,
             novosContatos: contatos.filter((contato) => contato.pk_contato_id !== '')
         };
 

@@ -16,13 +16,16 @@ export function Gerenciador() {
               </IconeSistema>
             </StyledLink>
             <IconeSistema>
-              <p>Usuarios</p>
+              <p>Clientes</p>
             </IconeSistema>
             <IconeSistema>
-              <p>Usuarios</p>
+              <p>Fornecedores</p>
             </IconeSistema>
             <IconeSistema>
-              <p>Usuarios</p>
+              <p>Produtos</p>
+            </IconeSistema>
+            <IconeSistema>
+              <p>Vendas</p>
             </IconeSistema>
         
       </Conteudo>
