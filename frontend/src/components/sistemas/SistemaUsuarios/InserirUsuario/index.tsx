@@ -55,8 +55,8 @@ export function InserirUsuario() {
 
         const apiUrl = `http://localhost:3001/users/InserirUsuario`;
         const requestBody = {
-            user_nome: usuario.user_nome,
-            user_email: usuario.user_email,
+            novoNome: usuario.user_nome,
+            novoEmail: usuario.user_email,
             logradouro: usuario.endereco.logradouro,
             numero: usuario.endereco.numero,
             complemento: usuario.endereco.complemento,
@@ -67,8 +67,10 @@ export function InserirUsuario() {
             pais: usuario.endereco.pais,
             endCompleto: `${usuario.endereco.logradouro} ${usuario.endereco.numero}, ${usuario.endereco.complemento} - ${usuario.endereco.bairro}, ${usuario.endereco.cidade}, ${usuario.endereco.pais} - ${usuario.endereco.cep}`,
             tipoUser: usuario.tipo_usuario,
-            novosContatos: contatos.filter((contato) => contato.pk_contato_id !== '')
+            novosContatos: contatos.filter((contato) => contato.tel !== '')
         };
+        console.log('ultimo de hj user===>', usuario,'ultimo de hj contatos===>',contatos);
+        
 
         fetch(apiUrl, {
             method: 'POST',
@@ -146,7 +148,7 @@ export function InserirUsuario() {
                                 >
                                     <option value="">Selecione um tipo</option>
                                     {tiposUsuarios.map((tipo: any) => (
-                                        <option key={tipo.pk_user_tipo_id} value={tipo.tipo_usuario}>
+                                        <option key={tipo.pk_user_tipo_id} value={tipo.pk_user_tipo_id}>
                                             {tipo.tipo_usuario}
                                         </option>
                                     ))}

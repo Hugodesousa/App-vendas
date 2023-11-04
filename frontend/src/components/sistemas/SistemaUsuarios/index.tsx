@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Container, Conteudo } from "../../Home/styles";
 import { MenuLateral } from "../../MenuLateral";
 import { Button, Title, SystemUser, DivNovoUser } from "./styles";

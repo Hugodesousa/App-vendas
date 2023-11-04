@@ -29,7 +29,17 @@ export function TabelaUsuarios() {
             })
             .then((data) => {
                 const t = data
-                setUsuarios(t)
+
+                const filtrarUsuariosUnicos = (usuarios: Usuario[]) => {
+                    const usuariosUnicos = usuarios.filter(
+                        (usuario, index, self) =>
+                            index === self.findIndex((t) => t.pk_user_id === usuario.pk_user_id)
+                    );
+                    return usuariosUnicos;
+                };
+                const usuariosUnicos = filtrarUsuariosUnicos(t);
+                setUsuarios(usuariosUnicos);
+                
             })
             .catch((error) => {
                 console.error('There was a problem with the fetch operation:', error);
@@ -52,7 +62,8 @@ export function TabelaUsuarios() {
             </thead>
 
             <tbody>
-                {usuarios.map((usuario, index) => (
+                
+                {usuarios.filter((user) => user.pk_user_id ).map((usuario, index) => (
                     <Tr key={usuario.pk_user_id} onClick={() => null}>
                         <Td>
                             <StyledLink to={`/Gerenciador/SistemaUsuarios/EditarUsuario/${usuario.pk_user_id}`}>

@@ -214,6 +214,7 @@ class UsersController extends Controller {
   }
 
   public async inserirUsuarios() {
+    console.log('query==>', this.req.body);
     const {
       novoNome,
       novoEmail,
