@@ -14,6 +14,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(userRoutes);
+app.use(productsRoutes);
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 app.use(GenericError);
 

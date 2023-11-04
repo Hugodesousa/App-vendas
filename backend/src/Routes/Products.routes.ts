@@ -7,6 +7,6 @@ productsRoutes.get('/products/list', (
   req: Request,
   res: Response,
   next: NextFunction,
-) => new ProductsController(req, res, next).findAllProducts())
+) => new ProductsController(req, res, next).todosProdutos())
 
 export default productsRoutes;

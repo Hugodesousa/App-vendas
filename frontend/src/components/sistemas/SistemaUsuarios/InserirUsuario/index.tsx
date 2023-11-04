@@ -24,7 +24,7 @@ export function InserirUsuario() {
         }
     });
 
-    const [tiposUsuarios, setTiposUsuarios] = useState<any[]>([]);
+    const [tiposUsuarios, setTiposUsuarios] = useState<IUser[]>([]);
     const [contatos, setContatos] = useState([{ pk_contato_id: '', tel: '', ddd: '' }]);
 
 
@@ -53,44 +53,57 @@ export function InserirUsuario() {
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault();
 
-        const apiUrl = `http://localhost:3001/users/InserirUsuario`;
-        const requestBody = {
-            novoNome: usuario.user_nome,
-            novoEmail: usuario.user_email,
-            logradouro: usuario.endereco.logradouro,
-            numero: usuario.endereco.numero,
-            complemento: usuario.endereco.complemento,
-            bairro: usuario.endereco.bairro,
-            cidade: usuario.endereco.cidade,
-            estado: usuario.endereco.estado,
-            cep: usuario.endereco.cep,
-            pais: usuario.endereco.pais,
-            endCompleto: `${usuario.endereco.logradouro} ${usuario.endereco.numero}, ${usuario.endereco.complemento} - ${usuario.endereco.bairro}, ${usuario.endereco.cidade}, ${usuario.endereco.pais} - ${usuario.endereco.cep}`,
-            tipoUser: usuario.tipo_usuario,
-            novosContatos: contatos.filter((contato) => contato.tel !== '')
-        };
-        console.log('ultimo de hj user===>', usuario,'ultimo de hj contatos===>',contatos);
-        
+        if (
+            usuario.user_nome &&
+            usuario.user_email &&
+            usuario.tipo_usuario &&
+            usuario.endereco.logradouro &&
+            usuario.endereco.numero &&
+            usuario.endereco.bairro &&
+            usuario.endereco.cidade &&
+            usuario.endereco.estado &&
+            usuario.endereco.cep &&
+            usuario.endereco.pais &&
+            contatos.some(contato => contato.tel) // Verifica se pelo menos um telefone foi preenchido
+        ) {
+            const apiUrl = `http://localhost:3001/users/InserirUsuario`;
+            const requestBody = {
+                novoNome: usuario.user_nome,
+                novoEmail: usuario.user_email,
+                logradouro: usuario.endereco.logradouro,
+                numero: usuario.endereco.numero,
+                complemento: usuario.endereco.complemento,
+                bairro: usuario.endereco.bairro,
+                cidade: usuario.endereco.cidade,
+                estado: usuario.endereco.estado,
+                cep: usuario.endereco.cep,
+                pais: usuario.endereco.pais,
+                endCompleto: `${usuario.endereco.logradouro} ${usuario.endereco.numero}, ${usuario.endereco.complemento} - ${usuario.endereco.bairro}, ${usuario.endereco.cidade}, ${usuario.endereco.pais} - ${usuario.endereco.cep}`,
+                tipoUser: usuario.tipo_usuario,
+                novosContatos: contatos.filter((contato) => contato.tel !== '')
+            };
 
-        fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(requestBody)
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
+
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestBody)
             })
-            .then((data) => {
-                alert('Usuário Inserido');
-            })
-            .catch((error) => {
-                console.error('There was a problem with the fetch operation:', error);
-            });
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    alert('Usuário Inserido');
+                })
+                .catch((error) => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
+        } else { alert("Todos os campos devem estar preenchidos") }
     };
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -202,7 +215,7 @@ export function InserirUsuario() {
                                 </div>
                             ))}
                             <div>
-                            {contatos.length < 3 && (
+                                {contatos.length < 3 && (
                                     <Button onClick={() => setContatos([...contatos, { pk_contato_id: '', tel: '', ddd: '' }])}>
                                         Adicionar Telefone
                                     </Button>

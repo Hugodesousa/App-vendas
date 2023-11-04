@@ -1,7 +1,9 @@
-// import { Button } from '../Button'
-import { Container, Conteudo, Form, FormGroup, FormSection, Input, SubTitle, SubmitButton, SystemEditar } from "./styles";
+
+import { Container, Conteudo, DeleteButton, Form, FormGroup, FormSection, FormSectionButtons, Input, SubTitle, SubmitButton, SystemEditar } from "./styles";
 import { MenuLateral } from "../../../MenuLateral";
 import { useState, FormEvent, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
+
 import { useParams } from 'react-router-dom';
 import { IUser, IEndereco } from "../../../../interfaces/UserInterfaces";
 
@@ -29,6 +31,9 @@ export function EditarUsuario() {
   const [contatos, setContatos] = useState([{ pk_contato_id: '', tel: '', ddd: '' }]);
   const { userId } = useParams();
 
+  const navigate = useNavigate();
+
+
   useEffect(() => {
 
     const apiUrl = `http://localhost:3001/users/list/id/?userId=${userId}`
@@ -41,7 +46,6 @@ export function EditarUsuario() {
         return response.json();
       })
       .then((data) => {
-        console.log('===>', data);
         const usuarioData = data[0];
         setUsuario({
           pk_user_id: usuarioData.pk_user_id,
@@ -141,6 +145,36 @@ export function EditarUsuario() {
     }));
   };
 
+  const deletarUsuario = () => {
+
+    const apiUrl = `http://localhost:3001/users/delete`;
+
+    const requestBody = { userId };
+
+    fetch(apiUrl, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody)
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        alert("Usuário deletado com sucesso");
+        navigate("/Gerenciador/SistemaUsuarios");
+        return data;
+      })
+      .catch((error) => {
+        console.error('Houve um problema ao deletar o usuário:', error);
+        return error
+      });
+  };
+
   return (
     <Container>
       <MenuLateral />
@@ -203,8 +237,6 @@ export function EditarUsuario() {
 
             <FormSection>
               {contatos.map((contato, index) => {
-                console.log('test', contato.pk_contato_id);
-
                 if (contato.pk_contato_id !== '') {
                   return (
                     <div key={index}>
@@ -243,11 +275,14 @@ export function EditarUsuario() {
                 return null; // Se pk_contato_id for null, renderiza nada
               })}
             </FormSection>
-
-            <FormGroup>
-              <SubmitButton type="submit">Atualizar</SubmitButton>
-            </FormGroup>
-            
+            <FormSectionButtons>
+              <FormGroup>
+                <SubmitButton type="submit">Atualizar</SubmitButton>
+              </FormGroup>
+              <FormGroup>
+                <DeleteButton type="button" onClick={() => deletarUsuario()}>Deletar</DeleteButton>
+              </FormGroup>
+            </FormSectionButtons>
           </Form>
         </SystemEditar>
       </Conteudo>

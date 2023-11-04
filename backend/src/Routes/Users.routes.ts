@@ -35,4 +35,10 @@ userRoutes.post('/users/InserirUsuario', (
   next: NextFunction,
 ) => new usersController(req, res, next).inserirUsuarios());
 
+userRoutes.delete('/users/delete', (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => new usersController(req, res, next).deletarUsuario());
+
 export default userRoutes;

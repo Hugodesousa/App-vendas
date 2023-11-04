@@ -10,24 +10,30 @@ export function Gerenciador() {
       <MenuLateral />
       <Conteudo>
 
-            <StyledLink to="/Gerenciador/SistemaUsuarios">
-              <IconeSistema>
-                <p>Usuarios</p>
-              </IconeSistema>
-            </StyledLink>
-            <IconeSistema>
-              <p>Clientes</p>
-            </IconeSistema>
-            <IconeSistema>
-              <p>Fornecedores</p>
-            </IconeSistema>
-            <IconeSistema>
-              <p>Produtos</p>
-            </IconeSistema>
-            <IconeSistema>
-              <p>Vendas</p>
-            </IconeSistema>
+        <StyledLink to="/Gerenciador/SistemaUsuarios">
+          <IconeSistema>
+            <p>Usuarios</p>
+          </IconeSistema>
+        </StyledLink>
+
+        <IconeSistema>
+          <p>Clientes</p>
+        </IconeSistema>
+
+        <IconeSistema>
+          <p>Fornecedores</p>
+        </IconeSistema>
+
+        <StyledLink to="/Gerenciador/SistemaProdutos">
+          <IconeSistema>
+            <p>Produtos</p>
+          </IconeSistema>
+        </StyledLink>
         
+        <IconeSistema>
+          <p>Vendas</p>
+        </IconeSistema>
+
       </Conteudo>
 
     </Container>

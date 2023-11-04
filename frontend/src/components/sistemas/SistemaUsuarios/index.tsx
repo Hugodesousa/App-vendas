@@ -21,7 +21,7 @@ export function SistemaUsuarios() {
 
           <Link to="/Gerenciador/SistemaUsuarios/InserirUsuario">
 
-            <Button onClick={() => null}>+ Novo Usuario</Button>
+            <Button>+ Novo Usuario</Button>
           </Link>
 
           </DivNovoUser>
