@@ -118,7 +118,7 @@ class UsersController extends Controller {
     }
 
     if (!user) {
-      return this.res.status(500).send({ message: 'Nome ou usuario invalido' });
+      return this.res.status(500).send({ message: 'Usuario invalido' });
     }
   }
 
@@ -260,7 +260,6 @@ class UsersController extends Controller {
         const resultUsuario = await this.runQueryInsert(sqlNovoUsuario, paramsNovoUsuario);
   
         const userId = resultUsuario.insertId;
-        console.log('aaaa',userId);
         
   
         if (logradouro && pais && cep && estado && cidade && bairro && numero && complemento && endCompleto) {

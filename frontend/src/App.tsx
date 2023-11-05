@@ -7,6 +7,7 @@ import { EditarUsuario } from './components/sistemas/SistemaUsuarios/EditarUsuar
 import { InserirUsuario } from './components/sistemas/SistemaUsuarios/InserirUsuario';
 import { SistemaProdutos } from './components/sistemas/SistemaProdutos';
 import { InserirProduto } from './components/sistemas/SistemaProdutos/InserirProduto';
+import { EditarProduto } from './components/sistemas/SistemaProdutos/EditarProduto';
 
 export function App() {
   return (
@@ -21,6 +22,7 @@ export function App() {
         <Route path="/Gerenciador/SistemaUsuarios/InserirUsuario" element={<InserirUsuario />} />
         <Route path="/Gerenciador/SistemaProdutos" element={<SistemaProdutos />} />
         <Route path="/Gerenciador/SistemaProdutos/InserirProduto" element={<InserirProduto />} />
+        <Route path="/Gerenciador/SistemaProdutos/EditarProduto/:produtoId" element={<EditarProduto />} />
 
       </Routes>
     </>

@@ -1,7 +1,7 @@
 import { Button, Container, Conteudo, Form, FormGroup, FormSection, Input, SubTitle, SubmitButton, SystemEditar } from "./styles";
 import { MenuLateral } from "../../../MenuLateral";
 import { useState, FormEvent, useEffect } from "react";
-import { IProduto } from "../../../../interfaces/ProdutoInterfaces"; 
+import { IProduto } from "../../../../interfaces/ProdutoInterfaces";
 
 export function InserirProduto() {
   const [produto, setProduto] = useState<IProduto>({
@@ -87,33 +87,33 @@ export function InserirProduto() {
 
 
 
-      const apiUrl = `http://localhost:3001/produtos/InserirProduto`;
-      const requestBody = {
-        ...produto
-      };
-      console.log('ue',requestBody);
-      
-      fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody)
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json();
-        })
-        .then((data) => {
-          alert('Produto Inserido');
-        })
-        .catch((error) => {
-          console.error('There was a problem with the fetch operation:', error);
-        });
+    const apiUrl = `http://localhost:3001/produtos/InserirProduto`;
+    const requestBody = {
+      ...produto
+    };
+    console.log('ue', requestBody);
 
-  
+    fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody)
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        alert('Produto Inserido');
+      })
+      .catch((error) => {
+        console.error('There was a problem with the fetch operation:', error);
+      });
+
+
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -123,8 +123,8 @@ export function InserirProduto() {
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = event.target;
-    console.log('xxxxxx',value);
-    
+    console.log('xxxxxx', value);
+
     setProduto({ ...produto, [name]: value });
   };
 
@@ -201,7 +201,7 @@ export function InserirProduto() {
                   <option value="">Selecione a Categoria</option>
                   {categorias.map((categoria, index) => (
                     <option key={index} value={categoria.pk_categoria_id
-}>
+                    }>
                       {categoria.nome}
                     </option>
                   ))}

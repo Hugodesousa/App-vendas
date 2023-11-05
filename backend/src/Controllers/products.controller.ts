@@ -68,6 +68,26 @@ class ProductsController extends Controller {
 
 
   //----------------------------------------------------------------------------------------------------------------------- -----------------------------
+  
+  public async produtoPorId() {
+    const sqlProdutoPorId = `SELECT * FROM  produtos_unidade pu where pk_produtos_unidade_id = ?`
+    
+    const produtoId = this.req.query.produtoId;
+
+    if (produtoId) {
+      const paramsProdutoPorId = [produtoId];
+
+      this.runQuerySelect(sqlProdutoPorId, paramsProdutoPorId)
+        .then(rows => this.res.status(200).json(rows))
+        .catch(error => this.res.status(500).send(error));
+    }
+
+    if (!produtoId) {
+      return this.res.status(500).send({ message: 'Produto invalido' });
+    }
+
+  }
+
   public async todosProdutos() {
     const sqlTodosProdutos = `
     SELECT
@@ -87,7 +107,7 @@ class ProductsController extends Controller {
       cp.pk_categoria_id,
       cp.nome as categoria_nome
     FROM produtos_unidade as pu inner join categorias_produto cp on
-	    cp.pk_categoria_id = pu.fk_produto_categoria;`;
+	    cp.pk_categoria_id = pu.fk_produto_categoria limit 100;`;
 
     try {
 
@@ -125,9 +145,6 @@ class ProductsController extends Controller {
     }
   }
 
-  /**
-   * name
-   */
   public async inserirProduto() {
     console.log(this.req.body);
     const {
@@ -138,9 +155,6 @@ class ProductsController extends Controller {
       preco_custo,
       preco_venda,
       fk_produto_categoria,
-      data_cadastro,
-      data_fabricacao,
-      data_validade,
       fk_fornecedor_id,
       fk_promocao
     } = this.req.body;

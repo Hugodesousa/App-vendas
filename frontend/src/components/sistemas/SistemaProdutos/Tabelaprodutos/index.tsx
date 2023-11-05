@@ -47,53 +47,53 @@ export function TabelaProdutos() {
           <ThHeader>Código de Fábrica</ThHeader>
           <ThHeader>Nome do Produto</ThHeader>
           <ThHeader>Descrição</ThHeader>
-          <ThHeader>Quantidade em Estoque</ThHeader>
-          <ThHeader>Preço de Custo</ThHeader>
-          <ThHeader>Preço de Venda</ThHeader>
+          <ThHeader>Qtd.Estoque</ThHeader>
+          <ThHeader>P.Custo</ThHeader>
+          <ThHeader>P.Venda</ThHeader>
           <ThHeader>Categoria</ThHeader>
-          <ThHeader>Data de Cadastro</ThHeader>
+          <ThHeader>Cadastro</ThHeader>
         </TrHeader>
       </thead>
       <tbody>
         {produtos.map((produto, index) => (
           <Tr key={index}>
             <Td>
-              <StyledLink to={`/caminho-do-produto/${produto.pk_produtos_unidade_id}`}>
+              <StyledLink to={`/Gerenciador/SistemaProdutos/EditarProduto/${produto.pk_produtos_unidade_id}`}>
                 <p>{produto.codigo_fabrica}</p>
               </StyledLink>
             </Td>
             <Td>
-              <StyledLink to={`/caminho-do-produto/${produto.pk_produtos_unidade_id}`}>
+              <StyledLink to={`/Gerenciador/SistemaProdutos/EditarProduto/${produto.pk_produtos_unidade_id}`}>
                 <p>{produto.produto_nome}</p>
               </StyledLink>
             </Td>
             <Td>
-              <StyledLink to={`/caminho-do-produto/${produto.pk_produtos_unidade_id}`}>
+              <StyledLink to={`/Gerenciador/SistemaProdutos/EditarProduto/${produto.pk_produtos_unidade_id}`}>
                 <p>{produto.descricao}</p>
               </StyledLink>
             </Td>
             <Td>
-              <StyledLink to={`/caminho-do-produto/${produto.pk_produtos_unidade_id}`}>
+              <StyledLink to={`/Gerenciador/SistemaProdutos/EditarProduto/${produto.pk_produtos_unidade_id}`}>
                 <p>{produto.quantidade_estoque}</p>
               </StyledLink>
             </Td>
             <Td>
-              <StyledLink to={`/caminho-do-produto/${produto.pk_produtos_unidade_id}`}>
+              <StyledLink to={`/Gerenciador/SistemaProdutos/EditarProduto/${produto.pk_produtos_unidade_id}`}>
                 <p>{produto.preco_custo}</p>
               </StyledLink>
             </Td>
             <Td>
-              <StyledLink to={`/caminho-do-produto/${produto.pk_produtos_unidade_id}`}>
+              <StyledLink to={`/Gerenciador/SistemaProdutos/EditarProduto/${produto.pk_produtos_unidade_id}`}>
                 <p>{produto.preco_venda}</p>
               </StyledLink>
             </Td>
             <Td>
-              <StyledLink to={`/caminho-do-produto/${produto.pk_produtos_unidade_id}`}>
+              <StyledLink to={`/Gerenciador/SistemaProdutos/EditarProduto/${produto.pk_produtos_unidade_id}`}>
                 <p>{produto.categoria_nome}</p>
               </StyledLink>
             </Td>
             <Td>
-              <StyledLink to={`/caminho-do-produto/${produto.pk_produtos_unidade_id}`}>
+              <StyledLink to={`/Gerenciador/SistemaProdutos/EditarProduto/${produto.pk_produtos_unidade_id}`}>
                 <p>{produto.data_cadastro}</p>
               </StyledLink>
             </Td>

@@ -216,7 +216,7 @@ export function InserirUsuario() {
                             ))}
                             <div>
                                 {contatos.length < 3 && (
-                                    <Button onClick={() => setContatos([...contatos, { pk_contato_id: '', tel: '', ddd: '' }])}>
+                                    <Button type="button" onClick={() => setContatos([...contatos, { pk_contato_id: '', tel: '', ddd: '' }])}>
                                         Adicionar Telefone
                                     </Button>
                                 )}

@@ -21,6 +21,12 @@ productsRoutes.get('/products/list/fornecedores', (
   next: NextFunction,
 ) => new ProductsController(req, res, next).produtosFornecedores());
 
+productsRoutes.get('/products/list/id', (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => new ProductsController(req, res, next).produtoPorId());
+
 productsRoutes.post('/produtos/InserirProduto', (
   req: Request,
   res: Response,
