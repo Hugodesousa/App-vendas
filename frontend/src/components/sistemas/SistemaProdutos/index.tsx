@@ -17,9 +17,9 @@ export function SistemaProdutos() {
                     <Title>Sistema de Produtos</Title>
 
                     <DivNovoProduto>
-                        {/* <Link to="/Gerenciador/SistemaUsuarios/InserirUsuario"> */}
-                        <Button>    Cadastrar</Button>
-                        {/* </Link> */}
+                        <Link to="/Gerenciador/SistemaProdutos/InserirProduto">
+                        <Button>Cadastrar</Button>
+                        </Link>
                     </DivNovoProduto>
                     
                     <TabelaProdutos />

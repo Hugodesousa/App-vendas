@@ -18,6 +18,7 @@ export const Conteudo = styled.div`
   align-content: flex-start;
   justify-content: center;
   text-align: center;
+  overflow-x: auto;
 `;
 
 export const SystemEditar = styled.div`

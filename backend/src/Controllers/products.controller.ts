@@ -12,9 +12,9 @@ class ProductsController extends Controller {
     this.productsService = new ProductsService();
   }
 
-   //-------------------------Parte que lida com o db, tirar daqui depois. -----------------------------
+  //-------------------------Parte que lida com o db, tirar daqui depois. -----------------------------
 
-   private runQuerySelect(sql: string, params: (string | string[] | QueryString.ParsedQs | QueryString.ParsedQs[])[]): Promise<any> {
+  private runQuerySelect(sql: string, params: (string | string[] | QueryString.ParsedQs | QueryString.ParsedQs[])[]): Promise<any> {
     return new Promise((resolve, reject) => {
       db.all(sql, params, (err, rows) => {
         if (err) {
@@ -55,16 +55,16 @@ class ProductsController extends Controller {
 
   private runQueryDelete(sql: string, params: (string | QueryString.ParsedQs | string[] | QueryString.ParsedQs)[]): Promise<any> {
     return new Promise((resolve, reject) => {
-        db.run(sql, params, function (err) {
-            if (err) {
-                console.error('Erro ao executar o delete:', err.message);
-                reject(err.message);
-            } else {
-                resolve({ changes: this.changes });
-            }
-        });
+      db.run(sql, params, function (err) {
+        if (err) {
+          console.error('Erro ao executar o delete:', err.message);
+          reject(err.message);
+        } else {
+          resolve({ changes: this.changes });
+        }
+      });
     });
-}
+  }
 
 
   //----------------------------------------------------------------------------------------------------------------------- -----------------------------
@@ -90,12 +90,105 @@ class ProductsController extends Controller {
 	    cp.pk_categoria_id = pu.fk_produto_categoria;`;
 
     try {
-      
-      const todosProdutos = await this.runQuerySelect(sqlTodosProdutos,[])
+
+      const todosProdutos = await this.runQuerySelect(sqlTodosProdutos, [])
       return this.res.status(200).json(todosProdutos);
     } catch (error) {
       return this.res.status(500).send(error);
       // this.next(error)
+    }
+  }
+
+  public async produtosFornecedores() {
+    const sqlFornecedores = `SELECT * FROM fornecedores WHERE status_ativo = 1;`;
+
+    try {
+
+      const todosProdutos = await this.runQuerySelect(sqlFornecedores, [])
+      return this.res.status(200).json(todosProdutos);
+    } catch (error) {
+      return this.res.status(500).send(error);
+      // this.next(error)
+    }
+  }
+
+  public async produtosCategorias() {
+    const sqlCategorias = `SELECT * FROM categorias_produto;`;
+
+    try {
+
+      const todosProdutos = await this.runQuerySelect(sqlCategorias, [])
+      return this.res.status(200).json(todosProdutos);
+    } catch (error) {
+      return this.res.status(500).send(error);
+      // this.next(error)
+    }
+  }
+
+  /**
+   * name
+   */
+  public async inserirProduto() {
+    console.log(this.req.body);
+    const {
+      codigo_fabrica,
+      produto_nome,
+      descricao,
+      quantidade_estoque,
+      preco_custo,
+      preco_venda,
+      fk_produto_categoria,
+      data_cadastro,
+      data_fabricacao,
+      data_validade,
+      fk_fornecedor_id,
+      fk_promocao
+    } = this.req.body;
+
+    if (
+      !codigo_fabrica ||
+      !produto_nome ||
+      !descricao ||
+      quantidade_estoque === undefined ||
+      preco_custo === undefined ||
+      preco_venda === undefined ||
+      !fk_produto_categoria ||
+      !fk_fornecedor_id ||
+      fk_promocao === undefined
+    ) {
+      return this.res.status(400).json({ error: "Campos obrigatórios não preenchidos." });
+    }
+
+    try {
+      const inserirProdutoSQL = `INSERT INTO produtos_unidade
+      ( codigo_fabrica,
+        produto_nome, 
+        descricao, 
+        quantidade_estoque,
+        preco_custo, 
+        preco_venda, 
+        fk_produto_categoria, 
+        data_cadastro, 
+        fk_fornecedor_id, 
+        fk_promocao, 
+        produto_ativo)
+      VALUES( ?, ?, ?, ?, ?, ?, ?, date('now'), ?, 0, 1);`
+
+      const inserirProdutoParams = [
+        codigo_fabrica,
+        produto_nome,
+        descricao,
+        quantidade_estoque,
+        preco_custo,
+        preco_venda,
+        fk_produto_categoria,
+        fk_fornecedor_id]
+
+
+      await this.runQueryInsert(inserirProdutoSQL,inserirProdutoParams)
+      this.res.status(200).json({ message: 'Novo produto cadastrado' });
+    } catch (error) {
+      this.res.status(500).send(error);
     }
   }
 

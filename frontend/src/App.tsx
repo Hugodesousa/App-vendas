@@ -6,6 +6,7 @@ import { Gerenciador } from './components/Menus/Gerenciador';
 import { EditarUsuario } from './components/sistemas/SistemaUsuarios/EditarUsuario';
 import { InserirUsuario } from './components/sistemas/SistemaUsuarios/InserirUsuario';
 import { SistemaProdutos } from './components/sistemas/SistemaProdutos';
+import { InserirProduto } from './components/sistemas/SistemaProdutos/InserirProduto';
 
 export function App() {
   return (
@@ -19,6 +20,7 @@ export function App() {
         <Route path="/Gerenciador/SistemaUsuarios/EditarUsuario/:userId" element={<EditarUsuario />} />
         <Route path="/Gerenciador/SistemaUsuarios/InserirUsuario" element={<InserirUsuario />} />
         <Route path="/Gerenciador/SistemaProdutos" element={<SistemaProdutos />} />
+        <Route path="/Gerenciador/SistemaProdutos/InserirProduto" element={<InserirProduto />} />
 
       </Routes>
     </>
