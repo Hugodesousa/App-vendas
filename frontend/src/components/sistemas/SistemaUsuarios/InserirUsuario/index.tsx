@@ -1,7 +1,8 @@
-import { Button, Container, Conteudo, Form, FormGroup, FormSection, Input, SubTitle, SubmitButton, SystemEditar } from "./styles";
+import { Button, Container, Form, FormGroup, FormSection, Input, SubTitle, SubmitButton, SystemEditar } from "./styles";
 import { MenuLateral } from "../../../MenuLateral";
 import { useState, FormEvent, useEffect } from "react";
 import { IUser, IEndereco } from "../../../../interfaces/UserInterfaces";
+import { Conteudo } from "../../../Home/styles";
 
 export function InserirUsuario() {
     const [usuario, setUsuario] = useState<IUser>({

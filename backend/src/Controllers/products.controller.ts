@@ -31,7 +31,7 @@ class ProductsController extends Controller {
     return new Promise<void>((resolve, reject) => {
       db.run(sql, params, (updateErr) => {
         if (updateErr) {
-          console.error('Erro ao executar a update --->', updateErr.message);
+          console.error('Erro ao executar o update --->', updateErr.message);
           reject(updateErr.message);
         } else {
           resolve();
@@ -107,7 +107,7 @@ class ProductsController extends Controller {
       cp.pk_categoria_id,
       cp.nome as categoria_nome
     FROM produtos_unidade as pu inner join categorias_produto cp on
-	    cp.pk_categoria_id = pu.fk_produto_categoria limit 100;`;
+	    cp.pk_categoria_id = pu.fk_produto_categoria;`;
 
     try {
 
@@ -206,6 +206,90 @@ class ProductsController extends Controller {
     }
   }
 
+
+  public async editarProdutos() {
+    const {
+      codigo_fabrica,
+      produto_nome,
+      descricao,
+      quantidade_estoque,
+      preco_custo,
+      preco_venda,
+      fk_produto_categoria,
+      fk_fornecedor_id,
+      produtoId,
+      pk_produtos_unidade_id
+    } = this.req.body;
+
+
+    try {
+
+      if (codigo_fabrica &&
+        produto_nome &&
+        descricao &&
+        quantidade_estoque &&
+        preco_custo &&
+        preco_venda &&
+        fk_produto_categoria &&
+        fk_fornecedor_id &&
+        produtoId &&  pk_produtos_unidade_id) {
+        
+          const sqlEditarProduto = `
+            UPDATE produtos_unidade
+            SET 
+              codigo_fabrica=?, 
+              produto_nome =?, 
+              descricao=?, 
+              quantidade_estoque=?, 
+              preco_custo=?, 
+              preco_venda=?, 
+              fk_produto_categoria=?, 
+              data_cadastro=DATE('now') , 
+              data_fabricacao=null, 
+              data_validade=null, 
+              fk_fornecedor_id=?, 
+              fk_promocao=0, 
+              produto_ativo=1
+            WHERE pk_produtos_unidade_id= ?;
+          `;
+
+          const paramsEditarProduto = [
+            codigo_fabrica,
+            produto_nome,
+            descricao,
+            quantidade_estoque,
+            preco_custo,
+            preco_venda,
+            fk_produto_categoria,
+            fk_fornecedor_id,
+            produtoId
+          ];
+
+          await this.runQueryUpdate(sqlEditarProduto, paramsEditarProduto);
+      }
+
+      this.res.status(200).json({ message: 'Produto atualizado com sucesso' });
+    } catch (error) {
+      this.res.status(500).send(error);
+    }
+
+  }
+
+  public async deletarProdutos() {
+    const { produtoId } = this.req.body;
+
+    try {
+      if (produtoId) {
+        const sqlDeletarContatos = `DELETE FROM produtos_unidade WHERE pk_produtos_unidade_id=?;`;
+        await this.runQueryDelete(sqlDeletarContatos, [produtoId]);
+        this.res.status(200).json({ message: 'Produto deletado com sucesso' });
+      } else {
+        this.res.status(400).json({ message: 'ID do produto não fornecido' });
+      }
+    } catch (error) {
+      this.res.status(500).send(error);
+    }
+  }
 }
 
 export default ProductsController;

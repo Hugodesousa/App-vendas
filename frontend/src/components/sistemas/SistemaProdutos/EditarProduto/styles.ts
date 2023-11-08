@@ -5,21 +5,7 @@ export const Container = styled.div`
   display: flex;
 `;
 
-export const Conteudo = styled.div`
-  color: ${corDaFontEscura};
-  border-width: 2px;
-  border-color:  #9B111E;
-  border-style: solid;
-  /* width: 110rem; */
-  width: calc(100% - 12rem);
-  margin-left: 12rem;
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  justify-content: center;
-  text-align: center;
-  overflow-x: auto;
-`;
+
 
 export const SystemEditar = styled.div`
   display: flex;
@@ -75,6 +61,23 @@ export const Button = styled.button`
   padding: 10px 20px;
   margin-top: 20px;
   background-color: ${CorDestaque};
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+`;
+
+export const FormSectionButtons = styled.div`
+ display: flex;
+ flex-wrap: wrap;
+ width: 100%;
+ padding: 0.5rem;
+`;
+
+export const DeleteButton = styled.button`
+  padding: 10px 20px;
+  margin-top: 20px;
+  background-color: #800000;
   color: white;
   border: none;
   border-radius: 5px;

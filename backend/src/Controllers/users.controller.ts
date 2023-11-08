@@ -32,7 +32,7 @@ class UsersController extends Controller {
     return new Promise<void>((resolve, reject) => {
       db.run(sql, params, (updateErr) => {
         if (updateErr) {
-          console.error('Erro ao executar a update --->', updateErr.message);
+          console.error('Erro ao executar o update --->', updateErr.message);
           reject(updateErr.message);
         } else {
           resolve();

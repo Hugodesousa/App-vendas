@@ -14,7 +14,7 @@ export const Title = styled.h1`
 export const DivNovoUser = styled.div`
     display: flex;
     justify-content: end;
-    margin-right: 2rem;
+    /* margin-right: 2rem; */
     
 `;
 

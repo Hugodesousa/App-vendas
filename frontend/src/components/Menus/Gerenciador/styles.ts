@@ -3,39 +3,23 @@ import { CorDestaque, corDaFontClara, corDaFontEscura, corDeFundoEscura } from '
 import { Link } from 'react-router-dom'
 
 export const Container = styled.div`
-
   display: flex;
 
-`
-
-export const Conteudo = styled.div`
-  color: ${corDaFontEscura};
-  border-width: 2px;
-  border-color:  #9B111E;
-  border-style: solid;
-  /* width: 110rem; */
-  width: calc(100% - 12rem);
-  margin-left: 12rem;
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  justify-content: center;
-  text-align: center;
-  overflow-x: auto;
 `
 
 export const IconeSistema = styled.button`
   color: ${corDaFontClara};
   background-color: ${corDeFundoEscura};
   padding: 11px;
-  border-width: 2px;
   display: flex;
   justify-content: center;
+  /* border-width: 2px;
   border-color:  #9B111E;
-  border-style: solid;
+  border-style: solid; */
   width: 10rem;
   height: 3rem;
-  margin: 1rem;
+  margin: 3rem;
+  margin-top: 4rem;
   &:hover {
     background-color: ${CorDestaque};
       }

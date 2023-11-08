@@ -1,11 +1,12 @@
 
-import { Container, Conteudo, DeleteButton, Form, FormGroup, FormSection, FormSectionButtons, Input, SubTitle, SubmitButton, SystemEditar } from "./styles";
+import { Container, DeleteButton, Form, FormGroup, FormSection, FormSectionButtons, Input, SubTitle, SubmitButton, SystemEditar } from "./styles";
 import { MenuLateral } from "../../../MenuLateral";
 import { useState, FormEvent, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 
 import { useParams } from 'react-router-dom';
 import { IUser, IEndereco } from "../../../../interfaces/UserInterfaces";
+import { Conteudo } from "../../../Home/styles";
 
 export function EditarUsuario() {
   const [usuario, setUsuario] = useState<IUser>({

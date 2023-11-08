@@ -1,8 +1,9 @@
-import { Button, Container, Conteudo, Form, FormGroup, FormSection, Input, SubTitle, SubmitButton, SystemEditar } from "./styles";
+import { Container, DeleteButton, Form, FormGroup, FormSection, FormSectionButtons, Input, SubTitle, SubmitButton, SystemEditar } from "./styles";
 import { MenuLateral } from "../../../MenuLateral";
 import { useState, FormEvent, useEffect } from "react";
 import { IProduto } from "../../../../interfaces/ProdutoInterfaces";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { Conteudo } from "../../../Home/styles";
 
 export function EditarProduto() {
 
@@ -20,8 +21,8 @@ export function EditarProduto() {
         fk_fornecedor_id: '',
         fk_promocao: 0
     };
-    const [produto, setProduto] =  useState<IProduto>(defaultProductState);
-
+    const [produto, setProduto] = useState<IProduto>(defaultProductState);
+    const navigate = useNavigate();
     const [categorias, setCategorias] = useState<any[]>([]);
     const [fornecedores, setFornecedores] = useState<any[]>([]);
     const { produtoId } = useParams();
@@ -39,15 +40,12 @@ export function EditarProduto() {
         fetch(apiUrl)
             .then((response) => {
                 if (!response.ok) {
-                    console.log(response);
-
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
             .then((data) => {
                 const dataCategorias = data;
-                // console.log('aqui===>', dataCategorias);
                 setCategorias(dataCategorias);
             })
             .catch((error) => {
@@ -85,8 +83,6 @@ export function EditarProduto() {
                 return response.json();
             })
             .then((data) => {
-                console.log('xablauuuu ---->', data);
-
                 const receivedProduct = data[0];
                 const updatedProduct = {
                     ...defaultProductState,
@@ -97,48 +93,16 @@ export function EditarProduto() {
             .catch((error) => {
                 console.error('There was a problem with the fetch operation:', error);
             });
-        // const requestBody = {
 
-        // }
+    };
 
-        // const response = await fetch(apiUrl, {
-        //     method: 'PUT',
-        //     headers: {
-        //       'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify(requestBody)
-        //   });
-        //   if (!response.ok) {
-        //     throw new Error('Network response was not ok');
-        //   }
-        //   return await response.json();
-    }
+    const deletarProduto = async () => {
+        const apiUrl = `http://localhost:3001/products/delete`;
 
-    const handleSubmit = (event: FormEvent) => {
-        event.preventDefault();
-        if (
-            produto.codigo_fabrica === '' ||
-            produto.produto_nome === '' ||
-            produto.descricao === '' ||
-            produto.quantidade_estoque === 0 ||
-            produto.preco_custo === 0 ||
-            produto.preco_venda === 0 ||
-            produto.fk_produto_categoria === '' ||
-            produto.fk_fornecedor_id === ''
-        ) {
-            alert('Por favor, preencha todos os campos obrigatórios.');
-            return;
-        }
-
-
-
-        const apiUrl = `http://localhost:3001/produtos/InserirProduto`;
-        const requestBody = {
-            ...produto
-        };
+        const requestBody = { produtoId };
 
         fetch(apiUrl, {
-            method: 'POST',
+            method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -151,7 +115,54 @@ export function EditarProduto() {
                 return response.json();
             })
             .then((data) => {
-                alert('Produto Inserido');
+                alert("Produto deletado com sucesso");
+                navigate("/Gerenciador/SistemaProdutos");
+                return data;
+            })
+            .catch((error) => {
+                console.error('Houve um problema ao deletar o usuário:', error);
+                return error
+            });
+    };
+
+    const handleSubmit = (event: FormEvent) => {
+        event.preventDefault();
+        if (
+            produto.codigo_fabrica === '' ||
+            produto.produto_nome === '' ||
+            produto.descricao === '' ||
+            produto.quantidade_estoque === 0 ||
+            produto.preco_custo === 0 ||
+            produto.preco_venda === 0 ||
+            produto.fk_produto_categoria === '' ||
+            produto.fk_fornecedor_id === '' ||
+            !produtoId
+        ) {
+            alert('Por favor, preencha todos os campos obrigatórios.');
+            return;
+        }
+
+        const apiUrl = `http://localhost:3001/products/edit`;
+        const requestBody = {
+            produtoId,
+            ...produto
+        };
+
+        fetch(apiUrl, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody)
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                alert('Produto Atualizado');
             })
             .catch((error) => {
                 console.error('There was a problem with the fetch operation:', error);
@@ -176,7 +187,7 @@ export function EditarProduto() {
             <MenuLateral />
             <Conteudo>
                 <SystemEditar>
-                    <h1>EditarProduto</h1>
+                    <h1>Editar Produto</h1>
                     <Form onSubmit={handleSubmit}>
                         <SubTitle>Dados do Produto</SubTitle>
                         <FormSection>
@@ -266,9 +277,14 @@ export function EditarProduto() {
                                 </select>
                             </FormGroup>
                         </FormSection>
-                        <FormGroup>
-                            <SubmitButton type="submit">Inserir</SubmitButton>
-                        </FormGroup>
+                        <FormSectionButtons>
+                            <FormGroup>
+                                <SubmitButton type="submit">Editar Produto</SubmitButton>
+                            </FormGroup>
+                            <FormGroup>
+                                <DeleteButton type="button" onClick={() => deletarProduto()}>Deletar</DeleteButton>
+                            </FormGroup>
+                        </FormSectionButtons>
                     </Form>
                 </SystemEditar>
             </Conteudo>

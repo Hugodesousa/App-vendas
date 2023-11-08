@@ -1,7 +1,8 @@
-import { Button, Container, Conteudo, Form, FormGroup, FormSection, Input, SubTitle, SubmitButton, SystemEditar } from "./styles";
+import { Container, Form, FormGroup, FormSection, Input, SubTitle, SubmitButton, SystemEditar } from "./styles";
 import { MenuLateral } from "../../../MenuLateral";
 import { useState, FormEvent, useEffect } from "react";
 import { IProduto } from "../../../../interfaces/ProdutoInterfaces";
+import { Conteudo } from "../../../Home/styles";
 
 export function InserirProduto() {
   const [produto, setProduto] = useState<IProduto>({
@@ -33,16 +34,12 @@ export function InserirProduto() {
     fetch(apiUrl)
       .then((response) => {
         if (!response.ok) {
-          console.log(response);
-
           throw new Error('Network response was not ok');
         }
         return response.json();
       })
       .then((data) => {
         const dataCategorias = data;
-        // console.log('aqui===>', dataCategorias);
-        console.log(dataCategorias);
         setCategorias(dataCategorias);
       })
       .catch((error) => {
@@ -91,7 +88,6 @@ export function InserirProduto() {
     const requestBody = {
       ...produto
     };
-    console.log('ue', requestBody);
 
     fetch(apiUrl, {
       method: 'POST',
@@ -123,8 +119,6 @@ export function InserirProduto() {
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = event.target;
-    console.log('xxxxxx', value);
-
     setProduto({ ...produto, [name]: value });
   };
 

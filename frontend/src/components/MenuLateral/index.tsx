@@ -1,5 +1,5 @@
-// import { Button } from '../Button'
 import { ContainerMenuLateral, ListaMenus, Logo, MenuLateralItem, Menus, StyledLink } from "./styles";
+
 
 export function MenuLateral() {
 

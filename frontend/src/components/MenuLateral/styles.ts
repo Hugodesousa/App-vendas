@@ -27,9 +27,11 @@ export const Logo = styled.img`
 `
 
 export const Menus = styled.div`
-border-width: 2px;
+
+/* border-width: 2px;
 border-color:  #9B111E;
-border-style: solid;
+border-style: solid; */
+
 margin-top: 2rem;
 width: 12rem;
 padding: 0.7rem;

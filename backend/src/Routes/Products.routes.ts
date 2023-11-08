@@ -33,4 +33,16 @@ productsRoutes.post('/produtos/InserirProduto', (
   next: NextFunction,
 ) => new ProductsController(req, res, next).inserirProduto());
 
+productsRoutes.put('/products/edit', (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => new ProductsController(req, res, next).editarProdutos());
+
+productsRoutes.delete('/products/delete', (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => new ProductsController(req, res, next).deletarProdutos());
+
 export default productsRoutes;

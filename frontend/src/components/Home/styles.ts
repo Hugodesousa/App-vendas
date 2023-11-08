@@ -9,9 +9,11 @@ export const Container = styled.div`
 
 export const Conteudo = styled.div`
   color: ${corDaFontEscura};
-  border-width: 2px;
-  border-color:  #9B111E;
-  border-style: solid;
+  
+  /* border-width: 2px;
+  border-color:  #9B111E; */
+  /* border-style: solid; */
+
   /* width: 110rem; */
   /* flex-grow: 1; */
   width: calc(100% - 12rem);
@@ -22,6 +24,7 @@ export const Conteudo = styled.div`
   justify-content: center;
   text-align: center;
   overflow-x: auto;
+  
 `
 
 export const IconeSistema = styled.button`
