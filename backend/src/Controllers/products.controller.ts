@@ -107,7 +107,8 @@ class ProductsController extends Controller {
       cp.pk_categoria_id,
       cp.nome as categoria_nome
     FROM produtos_unidade as pu inner join categorias_produto cp on
-	    cp.pk_categoria_id = pu.fk_produto_categoria;`;
+	    cp.pk_categoria_id = pu.fk_produto_categoria
+    order by pu.produto_nome;`;
 
     try {
 

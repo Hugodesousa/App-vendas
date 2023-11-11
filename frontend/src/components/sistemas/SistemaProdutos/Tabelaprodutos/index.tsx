@@ -23,6 +23,7 @@ export function TabelaProdutos() {
 
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const ITEMS_PER_PAGE = 50;
 
@@ -72,8 +73,21 @@ export function TabelaProdutos() {
     }
   };
 
+  const filteredProdutos = produtos.filter((produto) => {
+    return (
+      (produto.codigo_fabrica && produto.codigo_fabrica.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (produto.produto_nome && produto.produto_nome.toLowerCase().includes(searchTerm.toLowerCase()))
+      // Adicione mais verificações para outros campos, se necessário
+    );
+  });
+
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
+
   const renderProdutos = () => {
-    return produtos.slice(currentIndex, currentIndex + ITEMS_PER_PAGE).map((produto, index) => (
+    return filteredProdutos.slice(currentIndex, currentIndex + ITEMS_PER_PAGE).map((produto, index) => (
       <Tr key={index}>
         <Td>
           <StyledLink to={`/Gerenciador/SistemaProdutos/EditarProduto/${produto.pk_produtos_unidade_id}`}>
@@ -129,6 +143,15 @@ export function TabelaProdutos() {
 
   return (
     <div>
+      <div>
+      <input
+        type="text"
+        value={searchTerm}
+        onChange={handleSearch}
+        placeholder="Buscar por nome ou código de fábrica do produto"
+      />
+      {/* Restante do seu código */}
+    </div>
       <Table>
         <thead>
           <TrHeader>

@@ -4,8 +4,7 @@ import { CorDestaque } from '../../const/global_const';
 
 export const SystemProducts = styled.div`
     display: flex;
-    flex-direction: column;
-    
+    flex-direction: column; 
 `;
 
 export const Title = styled.h1`
@@ -24,10 +23,10 @@ export const Button = styled.button`
   cursor: pointer;
 `;
 
+
 export const DivNovoProduto = styled.div`
     display: flex;
     justify-content: end;
-    /* margin-right: 5rem; */
-    
+    /* margin-right: 5rem; */  
     
 `;

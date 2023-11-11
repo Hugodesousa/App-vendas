@@ -4,7 +4,7 @@ import { MenuLateral } from "../../MenuLateral";
 import { Conteudo } from '../../Home/styles';
 
 
-export function Gerenciador() {
+export function SistemaVendas() {
 
   return (
     <Container>
@@ -13,28 +13,17 @@ export function Gerenciador() {
 
         <StyledLink to="/Gerenciador/SistemaUsuarios">
           <IconeSistema>
-            <p>Usuarios</p>
+            <p>Minhas vendas</p>
           </IconeSistema>
         </StyledLink>
 
         <IconeSistema>
-          <p>Clientes</p>
+          <p>Todas as vendas</p>
         </IconeSistema>
 
-        <IconeSistema>
-          <p>Fornecedores</p>
-        </IconeSistema>
-
-        <StyledLink to="/Gerenciador/SistemaProdutos">
+        <StyledLink to="/Gerenciador/SistemaVendas/CriarVenda">
           <IconeSistema>
-            <p>Produtos</p>
-          </IconeSistema>
-        </StyledLink>
-
-
-        <StyledLink to="/Gerenciador/SistemaVendas">
-          <IconeSistema>
-            <p>Vendas</p>
+            <p>Criar venda</p>
           </IconeSistema>
         </StyledLink>
 
