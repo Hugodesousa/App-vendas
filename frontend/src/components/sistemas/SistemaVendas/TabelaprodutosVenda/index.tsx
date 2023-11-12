@@ -42,9 +42,6 @@ export function TabelaProdutosVenda() {
       .then((data) => {
         salvarListaProdutos(data)
         montarListaProdutos();
-
-
-
       })
       .catch((error) => {
         console.error('There was a problem with the fetch operation:', error);
@@ -131,9 +128,6 @@ export function TabelaProdutosVenda() {
   };
   
   const isProdutoNoCarrinho = (produtoId: number) => {
-    // const carrinhoAtualString = localStorage.getItem('carrinho');
-    // const carrinhoAtual: Produto[] = carrinhoAtualString ? JSON.parse(carrinhoAtualString) : [];
-    
     return carrinho.some(item => item.pk_produtos_unidade_id === produtoId);
   }
 
