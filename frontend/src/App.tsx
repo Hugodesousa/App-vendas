@@ -11,6 +11,7 @@ import { EditarProduto } from './components/sistemas/SistemaProdutos/EditarProdu
 import { SistemaVendas } from './components/sistemas/SistemaVendas';
 import { CriarVenda } from './components/sistemas/SistemaVendas/CriarVenda';
 import { FinalizarVenda } from './components/sistemas/SistemaVendas/FinalizarVenda';
+import { Login } from './components/Login';
 
 export function App() {
   return (
@@ -18,10 +19,10 @@ export function App() {
       <GlobalStyle />
       <Routes>
 
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/home" element={<Home />} />
         
         <Route path="/Gerenciador" element={<Gerenciador />} />
-
         <Route path="/Gerenciador/SistemaUsuarios" element={<SistemaUsuarios />} />
         <Route path="/Gerenciador/SistemaUsuarios/EditarUsuario/:userId" element={<EditarUsuario />} />
         <Route path="/Gerenciador/SistemaUsuarios/InserirUsuario" element={<InserirUsuario />} />
