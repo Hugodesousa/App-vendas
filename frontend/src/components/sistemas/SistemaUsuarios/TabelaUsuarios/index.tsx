@@ -14,12 +14,19 @@ export function TabelaUsuarios() {
     }
 
     const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+    const token = localStorage.getItem('token');
 
     useEffect(() => {
 
         const apiUrl = 'http://localhost:3001/users/list';
 
-        fetch(apiUrl)
+        fetch(apiUrl, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+        })
             .then((response) => {
 
                 if (!response.ok) {
@@ -39,7 +46,7 @@ export function TabelaUsuarios() {
                 };
                 const usuariosUnicos = filtrarUsuariosUnicos(t);
                 setUsuarios(usuariosUnicos);
-                
+
             })
             .catch((error) => {
                 console.error('There was a problem with the fetch operation:', error);
@@ -62,8 +69,8 @@ export function TabelaUsuarios() {
             </thead>
 
             <tbody>
-                
-                {usuarios.filter((user) => user.pk_user_id ).map((usuario, index) => (
+
+                {usuarios.filter((user) => user.pk_user_id).map((usuario, index) => (
                     <Tr key={usuario.pk_user_id} onClick={() => null}>
                         <Td>
                             <StyledLink to={`/Gerenciador/SistemaUsuarios/EditarUsuario/${usuario.pk_user_id}`}>

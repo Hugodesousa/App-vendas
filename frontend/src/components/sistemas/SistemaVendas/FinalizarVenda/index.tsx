@@ -61,7 +61,10 @@ export function FinalizarVenda() {
   //     ...carrinho
   // ];
 
+  const usuario_login = localStorage.getItem('usuario_login');
   const requestBody = {
+
+
     vendedorId: 1,
     clienteId:2,
     total: null,

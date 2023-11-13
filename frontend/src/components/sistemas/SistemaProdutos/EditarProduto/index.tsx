@@ -26,6 +26,7 @@ export function EditarProduto() {
     const [categorias, setCategorias] = useState<any[]>([]);
     const [fornecedores, setFornecedores] = useState<any[]>([]);
     const { produtoId } = useParams();
+    const token = localStorage.getItem('token');
 
 
     useEffect(() => {
@@ -37,7 +38,12 @@ export function EditarProduto() {
     const fetchCategorias = async () => {
         const apiUrl = `http://localhost:3001/products/list/categorias`
 
-        fetch(apiUrl)
+        fetch(apiUrl,{
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+          })
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -56,7 +62,12 @@ export function EditarProduto() {
     const fetchFornecedores = async () => {
         const apiUrl = `http://localhost:3001/products/list/fornecedores`
 
-        fetch(apiUrl)
+        fetch(apiUrl,{
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+          })
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -75,7 +86,12 @@ export function EditarProduto() {
     const fetchProduto = async () => {
         const apiUrl = `http://localhost:3001/products/list/id?produtoId=${produtoId}`
 
-        fetch(apiUrl)
+        fetch(apiUrl,{
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+          })
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -88,6 +104,8 @@ export function EditarProduto() {
                     ...defaultProductState,
                     ...receivedProduct
                 };
+                console.log('ssssss',updatedProduct);
+                
                 setProduto(updatedProduct);
             })
             .catch((error) => {
@@ -105,6 +123,8 @@ export function EditarProduto() {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+                
             },
             body: JSON.stringify(requestBody)
         })
@@ -115,6 +135,7 @@ export function EditarProduto() {
                 return response.json();
             })
             .then((data) => {
+                localStorage.removeItem('listaProdutosLocal');
                 alert("Produto deletado com sucesso");
                 navigate("/Gerenciador/SistemaProdutos");
                 return data;
@@ -152,6 +173,7 @@ export function EditarProduto() {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
             },
             body: JSON.stringify(requestBody)
         })
@@ -162,7 +184,9 @@ export function EditarProduto() {
                 return response.json();
             })
             .then((data) => {
+                localStorage.removeItem('listaProdutosLocal');
                 alert('Produto Atualizado');
+                // navigate("/Gerenciador/SistemaProdutos");
             })
             .catch((error) => {
                 console.error('There was a problem with the fetch operation:', error);

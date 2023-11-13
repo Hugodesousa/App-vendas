@@ -3,7 +3,18 @@ import UsersService from '../Services/users.service';
 import Controller from './controller';
 import { db } from '../db/connect';
 import QueryString from 'qs';
+import jwt from 'jsonwebtoken';
+import config from '../jwt/config';
 
+type UsuarioLogin = {
+  pk_user_id: number;
+  user_nome: string;
+  user_email: string;
+  user_str_login: string;
+  data_cadastro: string;
+  user_senha: string;
+  tipo_usuario: 'ADMIN' | 'OUTRO_TIPO'; // Substitua 'OUTRO_TIPO' pelo outro tipo, se aplicável
+};
 
 class UsersController extends Controller {
   private usersService: UsersService;
@@ -11,6 +22,46 @@ class UsersController extends Controller {
   constructor(req: Request, res: Response, next: NextFunction) {
     super(req, res, next)
     this.usersService = new UsersService(res);
+  }
+
+
+
+  private generateToken(username: string, password: string): string {
+    return jwt.sign({ username, password }, config.secret, { expiresIn: config.expiresIn });
+  }
+
+
+  public async login() {
+
+    const { username, password } = this.req.body;
+
+    if (username && password) {
+      const user = await this.usuarioPorStrNome(username);
+      console.log('--->>>>', user);
+
+
+      if (user.user_senha === password) {
+
+        try {
+
+          const { user_senha, ...userWithoutPassword } = user;
+          const token = this.generateToken(username, user_senha);
+          this.res.status(200).json({ token, ...userWithoutPassword });
+
+        } catch (error) {
+
+          this.res.status(500).send(error);
+
+        }
+
+      }
+
+      if (user.user_senha !== password) {
+
+        this.res.status(500).send('Senha incorreta');
+
+      }
+    }
   }
 
   //-------------------------Parte que lida com o db, tirar daqui depois. -----------------------------
@@ -56,16 +107,16 @@ class UsersController extends Controller {
 
   private runQueryDelete(sql: string, params: (string | QueryString.ParsedQs | string[] | QueryString.ParsedQs)[]): Promise<any> {
     return new Promise((resolve, reject) => {
-        db.run(sql, params, function (err) {
-            if (err) {
-                console.error('Erro ao executar o delete:', err.message);
-                reject(err.message);
-            } else {
-                resolve({ changes: this.changes });
-            }
-        });
+      db.run(sql, params, function (err) {
+        if (err) {
+          console.error('Erro ao executar o delete:', err.message);
+          reject(err.message);
+        } else {
+          resolve({ changes: this.changes });
+        }
+      });
     });
-}
+  }
 
 
   //----------------------------------------------------------------------------------------------------------------------- -----------------------------
@@ -76,6 +127,31 @@ class UsersController extends Controller {
       .then(rows => this.res.status(200).json(rows))
       .catch(error => this.res.status(500).send(error));
 
+  }
+
+  public async usuarioPorStrNome(strNome: string) {
+    console.log('-----------------------------');
+
+    const sql = `
+    SELECT 
+    u.pk_user_id,
+    u.user_nome,
+    u.user_email,
+    u.user_str_login,
+    u.data_cadastro,
+    u.user_senha,
+    ut.tipo_usuario
+    FROM usuarios as u
+    INNER JOIN usuarios_tipo as ut ON u.fk_user_tipo_id = ut.pk_user_tipo_id
+    where u.user_str_login = ?;
+    `;
+
+    const params = [strNome];
+
+    const result = await this.runQuerySelect(sql, params)
+      .then(rows => rows[0])
+      .catch(error => error);
+    return result as unknown as UsuarioLogin;
   }
 
   public findUser() {
@@ -246,21 +322,21 @@ class UsersController extends Controller {
       novosContatos,
       tipoUser
     } = this.req.body;
-  
+
     try {
       if (novoNome && novoEmail && tipoUser) {
-        console.log('ttt',tipoUser);
-        
+        console.log('ttt', tipoUser);
+
         const sqlNovoUsuario = `
           INSERT INTO usuarios (user_nome, user_email, data_cadastro, fk_user_tipo_id, user_ativo)
           VALUES (?, ?, date('now'), ?, 1);
         `;
-        const paramsNovoUsuario = [novoNome, novoEmail,  tipoUser];
+        const paramsNovoUsuario = [novoNome, novoEmail, tipoUser];
         const resultUsuario = await this.runQueryInsert(sqlNovoUsuario, paramsNovoUsuario);
-  
+
         const userId = resultUsuario.insertId;
-        
-  
+
+
         if (logradouro && pais && cep && estado && cidade && bairro && numero && complemento && endCompleto) {
           const sqlEndereco = `
             INSERT INTO endereco (logradouro, pais, cep, estado, cidade, bairro, numero, complemento, end_completo, data_cadastro, ativo)
@@ -268,9 +344,9 @@ class UsersController extends Controller {
           `;
           const paramsEndereco = [logradouro, pais, cep, estado, cidade, bairro, numero, complemento, endCompleto];
           const resultEndereco = await this.runQueryInsert(sqlEndereco, paramsEndereco);
-  
+
           const enderecoId = resultEndereco.insertId;
-  
+
           const sqlUpdateUsuario = `
             UPDATE usuarios
             SET fk_endereco_id = ?
@@ -279,7 +355,7 @@ class UsersController extends Controller {
           const paramsUpdateUsuario = [enderecoId, userId];
           await this.runQueryUpdate(sqlUpdateUsuario, paramsUpdateUsuario);
         }
-  
+
         if (novosContatos && novosContatos.length > 0) {
           for (const contato of novosContatos) {
             const { tel, ddd } = contato;
@@ -291,7 +367,7 @@ class UsersController extends Controller {
             await this.runQueryInsert(sqlContato, paramsContato);
           }
         }
-  
+
         this.res.status(200).json({ message: 'Novo usuário inserido com sucesso' });
       } else {
         this.res.status(400).json({ message: 'Os campos obrigatórios estão faltando' });
@@ -300,39 +376,39 @@ class UsersController extends Controller {
       this.res.status(500).send(error);
     }
   }
-  
+
 
   public async deletarUsuario() {
     const { userId } = this.req.body;
 
-  try {
-    if (userId) {
-      // Deletar os telefones associados ao usuário
-      const sqlDeletarContatos = `DELETE FROM contatos WHERE fk_user_id = ?`;
-      await this.runQueryDelete(sqlDeletarContatos, [userId]);
+    try {
+      if (userId) {
+        // Deletar os telefones associados ao usuário
+        const sqlDeletarContatos = `DELETE FROM contatos WHERE fk_user_id = ?`;
+        await this.runQueryDelete(sqlDeletarContatos, [userId]);
 
-      // Obter o ID do endereço associado ao usuário
-      const sqlBuscarEndereco = `SELECT fk_endereco_id FROM usuarios WHERE pk_user_id = ?`;
-      const resultEndereco = await this.runQuerySelect(sqlBuscarEndereco, [userId]);
-      const enderecoId = resultEndereco[0].fk_endereco_id;
+        // Obter o ID do endereço associado ao usuário
+        const sqlBuscarEndereco = `SELECT fk_endereco_id FROM usuarios WHERE pk_user_id = ?`;
+        const resultEndereco = await this.runQuerySelect(sqlBuscarEndereco, [userId]);
+        const enderecoId = resultEndereco[0].fk_endereco_id;
 
-      if (enderecoId) {
-        // Deletar o endereço associado ao usuário
-        const sqlDeletarEndereco = `DELETE FROM endereco WHERE pk_endereco_id = ?`;
-        await this.runQueryDelete(sqlDeletarEndereco, [enderecoId]);
+        if (enderecoId) {
+          // Deletar o endereço associado ao usuário
+          const sqlDeletarEndereco = `DELETE FROM endereco WHERE pk_endereco_id = ?`;
+          await this.runQueryDelete(sqlDeletarEndereco, [enderecoId]);
+        }
+
+        // Deletar o usuário
+        const sqlDeletarUsuario = `DELETE FROM usuarios WHERE pk_user_id = ?`;
+        await this.runQueryDelete(sqlDeletarUsuario, [userId]);
+
+        this.res.status(200).json({ message: 'Usuário deletado com sucesso' });
+      } else {
+        this.res.status(400).json({ message: 'ID do usuário não fornecido' });
       }
-
-      // Deletar o usuário
-      const sqlDeletarUsuario = `DELETE FROM usuarios WHERE pk_user_id = ?`;
-      await this.runQueryDelete(sqlDeletarUsuario, [userId]);
-
-      this.res.status(200).json({ message: 'Usuário deletado com sucesso' });
-    } else {
-      this.res.status(400).json({ message: 'ID do usuário não fornecido' });
+    } catch (error) {
+      this.res.status(500).send(error);
     }
-  } catch (error) {
-    this.res.status(500).send(error);
-  }
   }
 }
 

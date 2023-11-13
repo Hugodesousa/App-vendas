@@ -3,6 +3,7 @@ import { MenuLateral } from "../../../MenuLateral";
 import { useState, FormEvent, useEffect } from "react";
 import { IProduto } from "../../../../interfaces/ProdutoInterfaces";
 import { Conteudo } from "../../../Home/styles";
+import { useNavigate } from "react-router-dom";
 
 export function InserirProduto() {
   const [produto, setProduto] = useState<IProduto>({
@@ -22,7 +23,9 @@ export function InserirProduto() {
 
   const [categorias, setCategorias] = useState<any[]>([]);
   const [fornecedores, setFornecedores] = useState<any[]>([]);
-
+  const token = localStorage.getItem('token');
+  const navigate = useNavigate();
+  
   useEffect(() => {
     fetchCategorias();
     fetchFornecedores();
@@ -31,7 +34,12 @@ export function InserirProduto() {
   const fetchCategorias = async () => {
     const apiUrl = `http://localhost:3001/products/list/categorias`
 
-    fetch(apiUrl)
+    fetch(apiUrl,{
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -50,7 +58,12 @@ export function InserirProduto() {
   const fetchFornecedores = async () => {
     const apiUrl = `http://localhost:3001/products/list/fornecedores`
 
-    fetch(apiUrl)
+    fetch(apiUrl,{
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -93,6 +106,7 @@ export function InserirProduto() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(requestBody)
     })
@@ -103,7 +117,9 @@ export function InserirProduto() {
         return response.json();
       })
       .then((data) => {
+        localStorage.removeItem('listaProdutosLocal');
         alert('Produto Inserido');
+        navigate("/Gerenciador/SistemaProdutos");
       })
       .catch((error) => {
         console.error('There was a problem with the fetch operation:', error);

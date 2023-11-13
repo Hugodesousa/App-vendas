@@ -71,6 +71,7 @@ class ProductsController extends Controller {
   
   public async produtoPorId() {
     const sqlProdutoPorId = `SELECT * FROM  produtos_unidade pu where pk_produtos_unidade_id = ?`
+
     
     const produtoId = this.req.query.produtoId;
 
@@ -209,6 +210,7 @@ class ProductsController extends Controller {
 
 
   public async editarProdutos() {
+    
     const {
       codigo_fabrica,
       produto_nome,
@@ -222,9 +224,9 @@ class ProductsController extends Controller {
       pk_produtos_unidade_id
     } = this.req.body;
 
-
+    
     try {
-
+      
       if (codigo_fabrica &&
         produto_nome &&
         descricao &&
@@ -234,7 +236,8 @@ class ProductsController extends Controller {
         fk_produto_categoria &&
         fk_fornecedor_id &&
         produtoId &&  pk_produtos_unidade_id) {
-        
+          console.log(this.req.body);
+          
           const sqlEditarProduto = `
             UPDATE produtos_unidade
             SET 

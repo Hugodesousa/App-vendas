@@ -27,7 +27,7 @@ export function InserirUsuario() {
 
     const [tiposUsuarios, setTiposUsuarios] = useState<IUser[]>([]);
     const [contatos, setContatos] = useState([{ pk_contato_id: '', tel: '', ddd: '' }]);
-
+    const token = localStorage.getItem('token');
 
     useEffect(() => {
         fetchTiposUsuarios();
@@ -36,7 +36,11 @@ export function InserirUsuario() {
     const fetchTiposUsuarios = async () => {
         const apiUrl = `http://localhost:3001/users/usuariosTipo`;
 
-        fetch(apiUrl)
+        fetch(apiUrl,{
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          })
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -68,6 +72,7 @@ export function InserirUsuario() {
             contatos.some(contato => contato.tel) // Verifica se pelo menos um telefone foi preenchido
         ) {
             const apiUrl = `http://localhost:3001/users/InserirUsuario`;
+            
             const requestBody = {
                 novoNome: usuario.user_nome,
                 novoEmail: usuario.user_email,
@@ -89,6 +94,7 @@ export function InserirUsuario() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify(requestBody)
             })

@@ -24,13 +24,19 @@ export function TabelaProdutos() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
+  const token = localStorage.getItem('token');
 
   const ITEMS_PER_PAGE = 50;
 
   useEffect(() => {
     const apiUrl = 'http://localhost:3001/products/list';
 
-    fetch(apiUrl)
+    fetch(apiUrl,{
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');

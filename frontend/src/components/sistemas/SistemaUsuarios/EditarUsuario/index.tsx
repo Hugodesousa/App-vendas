@@ -31,7 +31,7 @@ export function EditarUsuario() {
 
   const [contatos, setContatos] = useState([{ pk_contato_id: '', tel: '', ddd: '' }]);
   const { userId } = useParams();
-
+  const token = localStorage.getItem('token');
   const navigate = useNavigate();
 
 
@@ -39,7 +39,12 @@ export function EditarUsuario() {
 
     const apiUrl = `http://localhost:3001/users/list/id/?userId=${userId}`
 
-    fetch(apiUrl)
+    fetch(apiUrl,{
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -90,7 +95,8 @@ export function EditarUsuario() {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-      },
+        'Authorization': `Bearer ${token}`,
+    },
       body: JSON.stringify(requestBody)
     });
     if (!response.ok) {
@@ -149,14 +155,14 @@ export function EditarUsuario() {
   const deletarUsuario = () => {
 
     const apiUrl = `http://localhost:3001/users/delete`;
-
     const requestBody = { userId };
 
     fetch(apiUrl, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-      },
+        'Authorization': `Bearer ${token}`,
+    },
       body: JSON.stringify(requestBody)
     })
       .then((response) => {
