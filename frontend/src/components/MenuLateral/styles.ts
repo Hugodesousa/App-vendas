@@ -1,7 +1,9 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components'
+import { CorDestaque } from '../const/global_const';
 
 export const ContainerMenuLateral = styled.div`
-
+  position: fixed;
   display: flex;
   height: 100vh;
   width: 12rem;
@@ -15,14 +17,21 @@ export const ContainerMenuLateral = styled.div`
   }
 `
 
+export const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
+`;
+
 export const Logo = styled.img`
   width: 8rem;
 `
 
 export const Menus = styled.div`
-border-width: 2px;
+
+/* border-width: 2px;
 border-color:  #9B111E;
-border-style: solid;
+border-style: solid; */
+
 margin-top: 2rem;
 width: 12rem;
 padding: 0.7rem;
@@ -34,7 +43,10 @@ margin-top: 1rem;
 `
 
 export const MenuLateralItem = styled.li`
-
+  &:hover {
+    font-size: large;
+    cursor: pointer;
+  }
 `
 // export const Image = styled.img`
 //   width: 240px;

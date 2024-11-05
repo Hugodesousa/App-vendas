@@ -1,21 +1,7 @@
-// import ReactDOM from "react-dom";
-// import { App } from "./App";
-// import Provider from "./context/provider";
-// import { BrowserRouter as Router } from 'react-router-dom';
-
-// ReactDOM.render(
-//     <Router  >
-//         <Provider>
-//         <   App /> 
-//         </Provider>
-//     </Router>,
-// document.getElementById("root"));
-
-
 import { createRoot } from 'react-dom/client';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { App } from './App';
 import Provider from './context/provider';
-import { BrowserRouter as Router } from 'react-router-dom';
 
 const root = document.getElementById('root');
 
